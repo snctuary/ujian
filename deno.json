@@ -19,8 +19,7 @@
 		"indentWidth": 2
 	},
 	"exclude": [
-		"**/_fresh/*",
-		"**/*_test.ts"
+		"**/_fresh/*"
 	],
 	"imports": {
 		"~/": "./",
