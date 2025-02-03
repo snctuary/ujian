@@ -19,12 +19,15 @@ export async function createUser(
 		// TODO: upload user avatar
 	}
 
-	const commit = await kv.atomic().set(["users", "id", newUser.id], newUser)
-		.set(["users", "password", newUser.id], await hash(password)).set([
-			"users",
-			"username",
-			newUser.username,
-		], newUser.id).commit();
+	const usernameKey = ["users", "username", newUser.username];
+	const commit = await kv.atomic().check({
+		key: usernameKey,
+		versionstamp: null,
+	}).set(["users", "id", newUser.id], newUser)
+		.set(["users", "password", newUser.id], await hash(password)).set(
+			usernameKey,
+			newUser.id,
+		).commit();
 
 	if (commit.ok) {
 		return newUser;
