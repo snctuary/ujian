@@ -9,7 +9,7 @@ export default define.page(({ Component }) => {
 				<title>Ujian-v2</title>
 				<link rel="stylesheet" href="/styles.css" />
 			</head>
-			<body>
+			<body class="h-dvh">
 				<Component />
 			</body>
 		</html>

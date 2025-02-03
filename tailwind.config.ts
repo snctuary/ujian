@@ -8,7 +8,7 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				"sans": ["Visby", ...defaultTheme.fontFamily.sans],
+				"sans": ["Poppins", ...defaultTheme.fontFamily.sans],
 			},
 		},
 	},
