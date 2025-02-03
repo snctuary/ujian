@@ -1,9 +1,13 @@
-import { HttpError, page } from "fresh";
+import { HttpError, page, RouteConfig } from "fresh";
 import { define } from "~/utils/core.ts";
 import { EntryForm } from "~/islands/EntryForm.tsx";
 import { STATUS_CODE } from "@std/http/status";
 import { createUser } from "~/utils/user.ts";
 import { createSession } from "~/utils/session.ts";
+
+export const config: RouteConfig = {
+	skipInheritedLayouts: true,
+};
 
 export const handler = define.handlers({
 	GET(ctx) {
