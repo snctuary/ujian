@@ -13,8 +13,9 @@ export function EntryForm({ mode }: Props) {
 		<div class="flex flex-col justify-center items-center gap-3 p-4 min-h-full relative">
 			<form
 				class="flex flex-col gap-2 mt-3 fill-slate-800"
+				action={mode === "login" ? "/login" : "/signup"}
 				method="POST"
-				autocomplete="off"
+				onSubmit={() => setIsLoggingIn(true)}
 			>
 				<div class="flex flex-col gap-2">
 					<p class="text-4xl font-bold">
@@ -70,7 +71,6 @@ export function EntryForm({ mode }: Props) {
 					class="flex justify-center items-center mt-2 gap-1 p-2 bg-black text-white text-xs font-semibold rounded-lg transition ease-in-out duration-150 disabled:opacity-50"
 					disabled={!username || !password || isLoggingIn}
 					type="submit"
-					onClick={() => setIsLoggingIn(true)}
 				>
 					<p>{mode === "login" ? "Log In" : "Start"}</p>
 					<svg
