@@ -1,7 +1,7 @@
 import { page } from "fresh";
 import { define } from "~/utils/core.ts";
 import { retrieveJoinedClassrooms } from "~/utils/classrooms.ts";
-import { ClassroomItem } from "~/components/ClassroomItem.tsx";
+import { ClassroomList } from "~/islands/ClassroomsList.tsx";
 
 export const handler = define.handlers({
 	async GET(ctx) {
@@ -19,16 +19,5 @@ export const handler = define.handlers({
 export default define.page<typeof handler>(({ data }) => {
 	const { classrooms } = data;
 
-	return (
-		<div class="flex flex-col">
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-				{classrooms.map((classroom) => (
-					<ClassroomItem
-						classroom={classroom}
-						homeroomTeacher={classroom.homeroomTeacher}
-					/>
-				))}
-			</div>
-		</div>
-	);
+	return <ClassroomList classrooms={classrooms} />;
 });

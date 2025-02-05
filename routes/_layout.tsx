@@ -8,12 +8,12 @@ export const config: RouteConfig = {
 
 export default define.page((ctx) => {
 	return (
-		<div class="flex flex-col md:flex-row h-dvh">
+		<div class="flex flex-col md:flex-row h-dvh" f-client-nav>
 			<div class="flex flex-col gap-3 p-5 grow overflow-y-auto">
 				<div class="flex gap-2">
 					<div class="grow">
 						<Partial name="title">
-							<p class="text-4xl font-bold">{ctx.state.title}</p>
+							<p class="text-4xl font-extrabold">{ctx.state.title}</p>
 						</Partial>
 					</div>
 					<div class="bg-slate-200 rounded-full size-10"></div>

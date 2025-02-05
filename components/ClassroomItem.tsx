@@ -9,20 +9,20 @@ interface Props {
 export function ClassroomItem({ classroom, homeroomTeacher }: Props) {
 	return (
 		<a href={`/classrooms/${classroom.id}/overview`}>
-			<div class="h-36 bg-[#131313] text-white rounded-lg w-full md:max-w-1/3 relative group">
+			<div class="h-36 bg-[#131313] hover:bg-[#222222] text-white rounded-lg w-full relative group transition-all ease-in-out duration-150 ">
 				<div class="flex items-center absolute bottom-0 font-semibold p-2 w-full">
 					<div class="flex flex-col grow">
 						<p class="text-2xl group-hover:text-3xl transition-all ease-in-out duration-150">
 							{classroom.name}
 						</p>
-						<div class="flex items-center gap-1">
+						<div class="flex items-center gap-1 group-hover:gap-0 transition-all ease-in-out duration-150">
 							<div class="bg-slate-200 size-6 group-hover:size-0 rounded-full transition-all ease-in-out duration-150">
 							</div>
 							<p>{homeroomTeacher.username}</p>
 						</div>
 					</div>
 					<svg
-						class="-mr-6 group-hover:mr-2 opacity-25 group-hover:opacity-100 transition-all ease-in-out duration-150"
+						class="opacity-0 group-hover:opacity-100 transition-all ease-in-out duration-150"
 						fill="white"
 						xmlns="http://www.w3.org/2000/svg"
 						id="Bold"
