@@ -3,12 +3,8 @@ import { define } from "~/utils/core.ts";
 
 export const handler = define.handlers({
 	GET(ctx) {
-		if (!ctx.state.user) {
-			return ctx.redirect("/auth/refresh_token");
-		} else {
-			ctx.state.title = "Home";
-			return page({ toDo: [] });
-		}
+		ctx.state.title = "Home";
+		return page({ toDo: [] });
 	},
 });
 
