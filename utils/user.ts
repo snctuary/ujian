@@ -65,8 +65,21 @@ export async function retrievePassword(userId: string) {
 	return password.value;
 }
 
-export async function retrieveUser(userId: string) {
+export async function retrieveUser(
+	userId: string,
+	required: true,
+): Promise<User>;
+export async function retrieveUser(
+	userId: string,
+	required?: false,
+): Promise<User | null>;
+export async function retrieveUser(userId: string, required?: boolean) {
 	const user = await kv.get<User>(["users", "id", userId]);
+
+	if (required && !user.value) {
+		throw new Error("Unknown User");
+	}
+
 	return user.value;
 }
 
