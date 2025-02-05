@@ -1,7 +1,7 @@
 import { FreshContext } from "fresh";
 import { getCookies } from "@std/http/cookie";
 import { decode, encode, JWTPayload } from "@gz/jwt";
-import { User } from "~/utils/user.ts";
+import { retrieveUser } from "~/utils/user.ts";
 import { env } from "~/utils/env.ts";
 import { State } from "~/utils/core.ts";
 import { setCookie } from "@std/http/cookie";
@@ -64,12 +64,16 @@ export async function resolveSession(ctx: FreshContext<State>) {
 	const accessToken = cookies["access_token"];
 
 	if (accessToken) {
-		const user = await decode<User>(accessToken, env("JWT_SECRET", true));
-		ctx.state.user = user;
+		const token = await decode<Token>(accessToken, env("JWT_SECRET", true));
+
+		if (token.tokenType === "access_token") {
+			const user = await retrieveUser(token.userId);
+			ctx.state.user = user;
+		}
 	}
 }
 
-interface Token extends JWTPayload {
+export interface Token extends JWTPayload {
 	tokenType: TokenType;
 	userId: string;
 }

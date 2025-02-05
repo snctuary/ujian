@@ -36,6 +36,35 @@ export async function createUser(
 	}
 }
 
+export async function searchUser(
+	username: string,
+	fullData: true,
+): Promise<User | null>;
+export async function searchUser(
+	username: string,
+	fullData?: false,
+): Promise<string | null>;
+export async function searchUser(
+	username: string,
+	fullData?: boolean,
+): Promise<string | User | null> {
+	const userId = await kv.get<string>(["users", "username", username]);
+
+	if (userId.value) {
+		if (fullData) {
+			const user = await retrieveUser(userId.value);
+			return user;
+		}
+	}
+
+	return userId.value;
+}
+
+export async function retrievePassword(userId: string) {
+	const password = await kv.get<string>(["users", "password", userId]);
+	return password.value;
+}
+
 export async function retrieveUser(userId: string) {
 	const user = await kv.get<User>(["users", "id", userId]);
 	return user.value;
