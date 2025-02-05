@@ -1,10 +1,15 @@
 import { Partial } from "fresh/runtime";
+import { RouteConfig } from "fresh";
 import { define } from "~/utils/core.ts";
+
+export const config: RouteConfig = {
+	skipInheritedLayouts: true,
+};
 
 export default define.page((ctx) => {
 	return (
-		<div class="flex flex-col md:flex-row min-h-full" f-client-nav>
-			<div class="flex flex-col gap-3 p-5 grow">
+		<div class="flex flex-col md:flex-row h-dvh">
+			<div class="flex flex-col gap-3 p-5 grow overflow-y-auto">
 				<div class="flex gap-2">
 					<div class="grow">
 						<Partial name="title">
@@ -13,9 +18,11 @@ export default define.page((ctx) => {
 					</div>
 					<div class="bg-slate-200 rounded-full size-10"></div>
 				</div>
-				<Partial name="content">
-					<ctx.Component />
-				</Partial>
+				<div class="grow overflow-y-auto">
+					<Partial name="content">
+						<ctx.Component />
+					</Partial>
+				</div>
 			</div>
 			<div class="flex md:flex-col justify-center items-center gap-6 p-6 md:order-first bg-white">
 				<a class="group" href="/home">
