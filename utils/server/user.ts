@@ -1,5 +1,5 @@
-import { kv } from "~/utils/core.ts";
-import { snowflake } from "~/utils/snowflake.ts";
+import { kv } from "~/utils/server/core.ts";
+import { snowflake } from "~/utils/server/snowflake.ts";
 import { hash } from "@felix/bcrypt";
 
 interface CreateUserOptions extends Omit<User, "avatar" | "id"> {

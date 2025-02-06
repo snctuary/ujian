@@ -1,5 +1,5 @@
 import { App, fsRoutes, staticFiles, trailingSlashes } from "fresh";
-import { type State } from "~/utils/core.ts";
+import { type State } from "~/utils/server/core.ts";
 
 export const app = new App<State>();
 app.use(staticFiles());

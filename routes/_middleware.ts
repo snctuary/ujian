@@ -1,5 +1,5 @@
-import { define } from "~/utils/core.ts";
-import { resolveSession } from "~/utils/session.ts";
+import { define } from "~/utils/server/core.ts";
+import { resolveSession } from "~/utils/server/session.ts";
 
 export const handler = define.middleware(async (ctx) => {
 	await resolveSession(ctx);

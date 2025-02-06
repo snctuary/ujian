@@ -1,5 +1,5 @@
 import { createDefine } from "fresh";
-import { User } from "~/utils/user.ts";
+import { User } from "~/utils/server/user.ts";
 
 export interface State {
 	title?: string;

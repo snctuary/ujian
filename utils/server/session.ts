@@ -1,14 +1,15 @@
 import { FreshContext } from "fresh";
 import { getCookies } from "@std/http/cookie";
 import { decode, encode, JWTPayload } from "@gz/jwt";
-import { retrieveUser } from "~/utils/user.ts";
-import { env } from "~/utils/env.ts";
-import { State } from "~/utils/core.ts";
+import { retrieveUser } from "~/utils/server/user.ts";
+import { env } from "~/utils/server/env.ts";
+import { State } from "~/utils/server/core.ts";
 import { setCookie } from "@std/http/cookie";
 import { STATUS_CODE } from "@std/http/status";
 
 const TokenExpire = {
 	AccessToken: 24 * 60 * 60,
+	Csrf: 3,
 	RefreshToken: 7 * 24 * 60 * 60,
 };
 
@@ -41,6 +42,10 @@ export async function createToken(userId: string, tokenType: TokenType) {
 	switch (tokenType) {
 		case "access_token": {
 			expireIn += TokenExpire.AccessToken;
+			break;
+		}
+		case "csrf": {
+			expireIn += TokenExpire.Csrf;
 			break;
 		}
 		case "refresh_token": {
@@ -77,4 +82,4 @@ export interface Token extends JWTPayload {
 	tokenType: TokenType;
 	userId: string;
 }
-type TokenType = "access_token" | "refresh_token";
+type TokenType = "access_token" | "csrf" | "refresh_token";

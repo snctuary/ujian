@@ -1,9 +1,9 @@
 import { getCookies } from "@std/http/cookie";
 import { decode } from "@gz/jwt";
-import { define } from "~/utils/core.ts";
-import { createSession, Token } from "~/utils/session.ts";
-import { retrieveUser } from "~/utils/user.ts";
-import { env } from "~/utils/env.ts";
+import { define } from "~/utils/server/core.ts";
+import { createSession, Token } from "~/utils/server/session.ts";
+import { retrieveUser } from "~/utils/server/user.ts";
+import { env } from "~/utils/server/env.ts";
 
 export const handler = define.handlers({
 	async GET(ctx) {

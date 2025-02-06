@@ -1,6 +1,6 @@
 import { deleteCookie } from "@std/http/cookie";
 import { STATUS_CODE } from "@std/http/status";
-import { define } from "~/utils/core.ts";
+import { define } from "~/utils/server/core.ts";
 
 export const handler = define.handlers({
 	GET(_ctx) {

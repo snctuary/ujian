@@ -1,7 +1,8 @@
-import { ClassroomWithHomeroomTeacher } from "~/utils/classrooms.ts";
+import { ClassroomWithHomeroomTeacher } from "~/utils/server/classrooms.ts";
 import { ClassroomItem } from "~/components/ClassroomItem.tsx";
 import { useState } from "preact/hooks";
 import { Modal } from "~/islands/Modal.tsx";
+import { CreateClassroom } from "~/islands/CreateClassroom.tsx";
 
 interface Props {
 	classrooms: ClassroomWithHomeroomTeacher[];
@@ -103,7 +104,7 @@ export function ClassroomList({ classrooms }: Props) {
 				stateUpdater={setShowCreateClassModal}
 				title="Create a Class"
 			>
-				<p>soon</p>
+				<CreateClassroom />
 			</Modal>
 		</div>
 	);

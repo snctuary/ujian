@@ -40,7 +40,7 @@ export function Modal({ children, open, stateUpdater, title }: Props) {
 						</svg>
 					</button>
 				</div>
-				<div class="flex flex-col overflow-y-auto no-scroll">
+				<div class="grow overflow-y-auto no-scroll">
 					{children}
 				</div>
 			</div>

@@ -1,5 +1,5 @@
-import { Classroom } from "~/utils/classrooms.ts";
-import { User } from "~/utils/user.ts";
+import { Classroom } from "~/utils/server/classrooms.ts";
+import { User } from "~/utils/server/user.ts";
 
 interface Props {
 	classroom: Classroom;

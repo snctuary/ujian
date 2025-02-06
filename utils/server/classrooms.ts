@@ -1,6 +1,6 @@
-import { snowflake } from "~/utils/snowflake.ts";
-import { kv } from "~/utils/core.ts";
-import { retrieveUser, User } from "~/utils/user.ts";
+import { snowflake } from "~/utils/server/snowflake.ts";
+import { kv } from "~/utils/server/core.ts";
+import { retrieveUser, User } from "~/utils/server/user.ts";
 
 export async function addClassroomMember(classroomId: string, userId: string) {
 	const classroom = await retrieveClassroom(classroomId, true);
@@ -35,15 +35,13 @@ export async function createClassroom(name: string, homeroomTeacherId: string) {
 		homeroomTeacherId,
 	};
 
-	const userClassroomsKey = ["users", "classrooms", homeroomTeacherId];
-	const joinedClassrooms = await kv.get<string>(userClassroomsKey);
 	const commit = await kv.atomic().set(["classrooms", newClass.id], newClass)
-		.set(userClassroomsKey, [...(joinedClassrooms.value ?? []), newClass.id])
 		.commit();
 
 	if (commit.ok) {
 		try {
 			await addClassroomMember(newClass.id, homeroomTeacherId);
+			return newClass;
 		} catch (_) {
 			await deleteClassroom(newClass.id);
 		}

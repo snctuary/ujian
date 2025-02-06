@@ -1,5 +1,5 @@
 import { page } from "fresh";
-import { define } from "~/utils/core.ts";
+import { define } from "~/utils/server/core.ts";
 
 export const handler = define.handlers({
 	GET(ctx) {

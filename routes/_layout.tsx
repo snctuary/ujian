@@ -1,6 +1,6 @@
 import { Partial } from "fresh/runtime";
 import { RouteConfig } from "fresh";
-import { define } from "~/utils/core.ts";
+import { define } from "~/utils/server/core.ts";
 
 export const config: RouteConfig = {
 	skipInheritedLayouts: true,

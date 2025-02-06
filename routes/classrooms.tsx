@@ -1,6 +1,6 @@
 import { page } from "fresh";
-import { define } from "~/utils/core.ts";
-import { retrieveJoinedClassrooms } from "~/utils/classrooms.ts";
+import { define } from "~/utils/server/core.ts";
+import { retrieveJoinedClassrooms } from "~/utils/server/classrooms.ts";
 import { ClassroomList } from "~/islands/ClassroomsList.tsx";
 
 export const handler = define.handlers({
