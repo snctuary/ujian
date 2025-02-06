@@ -8,7 +8,7 @@ export const config: RouteConfig = {
 
 export default define.page((ctx) => {
 	return (
-		<div class="flex flex-col md:flex-row h-dvh" f-client-nav>
+		<div class="flex flex-col md:flex-row h-dvh select-none" f-client-nav>
 			<div class="flex flex-col gap-3 p-5 grow overflow-y-auto">
 				<div class="flex gap-2">
 					<div class="grow">
@@ -26,7 +26,7 @@ export default define.page((ctx) => {
 			</div>
 			<div class="flex md:flex-col justify-center items-center gap-6 p-6 md:order-first bg-white">
 				<a class="group" href="/home">
-					<div class="rounded-full p-4 fill-[#131313] group-aria-[current]:fill-white group-aria-[current]:bg-[#131313]">
+					<div class="rounded-full p-4 fill-[#131313] group-aria-[current]:fill-white group-aria-[current]:bg-[#131313] transition-all ease-in-out duration-150">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							id="Layer_1"
@@ -40,7 +40,7 @@ export default define.page((ctx) => {
 					</div>
 				</a>
 				<a class="group" href="/classrooms">
-					<div class="rounded-full p-4 fill-[#131313] group-aria-[current]:fill-white group-aria-[current]:bg-[#131313]">
+					<div class="rounded-full p-4 fill-[#131313] group-aria-[current]:fill-white group-aria-[current]:bg-[#131313] transition-all ease-in-out duration-150">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							id="Layer_1"

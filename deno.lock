@@ -49,7 +49,8 @@
     "npm:preact@^10.25.1": "10.25.4",
     "npm:preact@^10.25.4": "10.25.4",
     "npm:tailwindcss@^3.4.1": "3.4.17_postcss@8.5.1",
-    "npm:tailwindcss@^3.4.3": "3.4.17_postcss@8.5.1"
+    "npm:tailwindcss@^3.4.3": "3.4.17_postcss@8.5.1",
+    "npm:tailwindcss@^4.0.3": "4.0.3"
   },
   "jsr": {
     "@denosaurs/plug@1.0.6": {
@@ -1270,6 +1271,9 @@
         "sucrase"
       ]
     },
+    "tailwindcss@4.0.3": {
+      "integrity": "sha512-ImmZF0Lon5RrQpsEAKGxRvHwCvMgSC4XVlFRqmbzTEDb/3wvin9zfEZrMwgsa3yqBbPqahYcVI6lulM2S7IZAA=="
+    },
     "thenify-all@1.6.0": {
       "integrity": "sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==",
       "dependencies": [
@@ -1338,7 +1342,7 @@
       "npm:@preact/signals@^2.0.1",
       "npm:@sapphire/snowflake@^3.5.5",
       "npm:preact@^10.25.4",
-      "npm:tailwindcss@^3.4.3"
+      "npm:tailwindcss@^4.0.3"
     ]
   }
 }
