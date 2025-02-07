@@ -1,7 +1,9 @@
 import { createDefine } from "fresh";
 import { User } from "~/utils/server/user.ts";
+import { ClassroomWithHomeroomTeacher } from "~/utils/server/classrooms.ts";
 
 export interface State {
+	classroom?: ClassroomWithHomeroomTeacher;
 	title?: string;
 	user: User | null;
 }
