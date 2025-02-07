@@ -1,7 +1,7 @@
 import { page } from "fresh";
 import { define } from "~/utils/server/core.ts";
 import { retrieveJoinedClassrooms } from "~/utils/server/classrooms.ts";
-import { ClassroomList } from "~/islands/ClassroomsList.tsx";
+import { ClassroomListV2 } from "~/islands/ClassroomsListV2.tsx";
 
 export const handler = define.handlers({
 	async GET(ctx) {
@@ -19,5 +19,5 @@ export const handler = define.handlers({
 export default define.page<typeof handler>(({ data }) => {
 	const { classrooms } = data;
 
-	return <ClassroomList classrooms={classrooms} />;
+	return <ClassroomListV2 classrooms={classrooms} />;
 });
