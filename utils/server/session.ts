@@ -9,7 +9,7 @@ import { STATUS_CODE } from "@std/http/status";
 
 const TokenExpire = {
 	AccessToken: 24 * 60 * 60,
-	Csrf: 3,
+	Csrf: 5 * 60,
 	RefreshToken: 7 * 24 * 60 * 60,
 };
 

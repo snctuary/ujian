@@ -2,13 +2,15 @@ import { useState } from "preact/hooks";
 import { makeRequest } from "~/utils/client/makeRequest.ts";
 import { Classroom } from "~/utils/server/classrooms.ts";
 import { CreateClassroomData } from "~/routes/api/classrooms/index.ts";
+import { handleCsrf } from "~/utils/client/csrf.ts";
 
 export function CreateClassroom() {
 	const [name, setName] = useState<string>();
 	const [submitting, setSubmitting] = useState<boolean>(false);
+	const csrfToken = handleCsrf();
 
 	async function createClassroom() {
-		if (name) {
+		if (name && csrfToken) {
 			setSubmitting(true);
 			const data: CreateClassroomData = {
 				name,
@@ -17,6 +19,7 @@ export function CreateClassroom() {
 			const classroom = await makeRequest<Classroom>("/api/classrooms", {
 				method: "POST",
 				body,
+				csrfToken,
 			});
 
 			if (classroom) {
