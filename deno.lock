@@ -40,6 +40,7 @@
     "npm:@preact/signals@^1.2.3": "1.3.2_preact@10.25.4",
     "npm:@preact/signals@^2.0.1": "2.0.1_preact@10.25.4",
     "npm:@sapphire/snowflake@^3.5.5": "3.5.5",
+    "npm:@types/node@*": "22.5.4",
     "npm:autoprefixer@10.4.17": "10.4.17_postcss@8.4.35",
     "npm:cssnano@6.0.3": "6.0.3_postcss@8.4.35",
     "npm:esbuild-wasm@0.23.1": "0.23.1",
@@ -49,8 +50,8 @@
     "npm:preact@^10.25.1": "10.25.4",
     "npm:preact@^10.25.4": "10.25.4",
     "npm:tailwindcss@^3.4.1": "3.4.17_postcss@8.5.1",
-    "npm:tailwindcss@^3.4.3": "3.4.17_postcss@8.5.1",
-    "npm:tailwindcss@^4.0.3": "4.0.3"
+    "npm:tailwindcss@^3.4.17": "3.4.17_postcss@8.5.1",
+    "npm:tailwindcss@^3.4.3": "3.4.17_postcss@8.5.1"
   },
   "jsr": {
     "@denosaurs/plug@1.0.6": {
@@ -362,6 +363,12 @@
     },
     "@trysound/sax@0.2.0": {
       "integrity": "sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA=="
+    },
+    "@types/node@22.5.4": {
+      "integrity": "sha512-FDuKUJQm/ju9fT/SeX/6+gBzoPzlVCzfzmGkwKvRHQVxi4BntVbyIwf6a4Xn62mrvndLiml6z/UBXIdEVjQLXg==",
+      "dependencies": [
+        "undici-types"
+      ]
     },
     "ansi-regex@5.0.1": {
       "integrity": "sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ=="
@@ -1271,9 +1278,6 @@
         "sucrase"
       ]
     },
-    "tailwindcss@4.0.3": {
-      "integrity": "sha512-ImmZF0Lon5RrQpsEAKGxRvHwCvMgSC4XVlFRqmbzTEDb/3wvin9zfEZrMwgsa3yqBbPqahYcVI6lulM2S7IZAA=="
-    },
     "thenify-all@1.6.0": {
       "integrity": "sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==",
       "dependencies": [
@@ -1294,6 +1298,9 @@
     },
     "ts-interface-checker@0.1.13": {
       "integrity": "sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA=="
+    },
+    "undici-types@6.19.8": {
+      "integrity": "sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw=="
     },
     "update-browserslist-db@1.1.2_browserslist@4.24.4": {
       "integrity": "sha512-PPypAm5qvlD7XMZC3BujecnaOxwhrtoFR+Dqkk5Aa/6DssiH0ibKoketaj9w8LP7Bont1rYeoV5plxD7RTEPRg==",
@@ -1342,7 +1349,7 @@
       "npm:@preact/signals@^2.0.1",
       "npm:@sapphire/snowflake@^3.5.5",
       "npm:preact@^10.25.4",
-      "npm:tailwindcss@^4.0.3"
+      "npm:tailwindcss@^3.4.17"
     ]
   }
 }

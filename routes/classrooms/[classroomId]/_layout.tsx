@@ -1,6 +1,7 @@
 import { RouteConfig } from "fresh";
 import { define } from "~/utils/server/core.ts";
 import { Back } from "~/islands/Back.tsx";
+import { ClassroomNavigation } from "~/components/ClassroomNavigation.tsx";
 
 export const config: RouteConfig = {
 	skipInheritedLayouts: true,
@@ -19,8 +20,8 @@ export default define.page((ctx) => {
 					<p class="font-semibold">{classroom.homeroomTeacher.username}</p>
 				</div>
 			</div>
-			<div class="grow">
-				<ctx.Component />
+			<div class="flex flex-col md:flex-row gap-2 grow" f-client-nav>
+				<ClassroomNavigation classroomId={classroom.id} />
 			</div>
 		</div>
 	);
