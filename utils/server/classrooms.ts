@@ -117,6 +117,37 @@ export async function retrieveClassroomMember(
 	return member.value;
 }
 
+export async function retrieveClassroomMembers(
+	classroomId: string,
+	fullData: true,
+): Promise<(ClassroomMember & { user: User })[]>;
+export async function retrieveClassroomMembers(
+	classroomId: string,
+	fullData?: false,
+): Promise<ClassroomMember[]>;
+export async function retrieveClassroomMembers(
+	classroomId: string,
+	fullData?: boolean,
+) {
+	const members = await Array.fromAsync(
+		kv.list<ClassroomMember>({
+			prefix: ["classrooms", classroomId, "members"],
+		}),
+	);
+
+	if (fullData) {
+		const fetchedUsers = await Promise.all(
+			members.map((member) => retrieveUser(member.value.userId, true)),
+		);
+		return members.map((member, index) => ({
+			...member,
+			user: fetchedUsers.at(index)!,
+		}));
+	} else {
+		return members.map((member) => member.value);
+	}
+}
+
 export async function retrieveJoinedClassrooms(
 	userId: string,
 	fullData: true,
@@ -158,7 +189,7 @@ enum ClassroomMemberFlags {
 	Teacher = 1 << 2,
 	Student = 1 << 3,
 }
-interface ClassroomMember {
+export interface ClassroomMember {
 	flags: ClassroomMemberFlags;
 	userId: string;
 }

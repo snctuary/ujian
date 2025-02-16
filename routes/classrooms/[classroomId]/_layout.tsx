@@ -11,7 +11,7 @@ export default define.page((ctx) => {
 	const classroom = ctx.state.classroom!;
 
 	return (
-		<div class="flex flex-col h-dvh gap-4 p-4">
+		<div class="flex flex-col h-full p-4 gap-4">
 			<Back label={classroom.name} path="/classrooms" />
 			<div class="flex flex-col">
 				<p class="font-extrabold text-4xl">{classroom.name}</p>
@@ -20,8 +20,16 @@ export default define.page((ctx) => {
 					<p class="font-semibold">{classroom.homeroomTeacher.username}</p>
 				</div>
 			</div>
-			<div class="flex flex-col md:flex-row gap-2 grow" f-client-nav>
+			<div
+				class="flex flex-col md:flex-row gap-2 grow overflow-y-auto"
+				f-client-nav
+			>
 				<ClassroomNavigation classroomId={classroom.id} />
+				<div class="grow">
+					<div class="flex flex-col size-full overflow-y-auto no-scrollbar">
+						<ctx.Component />
+					</div>
+				</div>
 			</div>
 		</div>
 	);

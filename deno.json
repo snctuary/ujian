@@ -8,6 +8,9 @@
 	},
 	"lint": {
 		"rules": {
+			"include": [
+				"no-console"
+			],
 			"tags": [
 				"fresh",
 				"recommended"

@@ -1,5 +1,10 @@
+import { Partial } from "fresh/runtime";
 import { define } from "~/utils/server/core.ts";
 
 export default define.page((_ctx) => {
-	return <p>overview</p>;
+	return (
+		<Partial name="content">
+			<p>overview</p>
+		</Partial>
+	);
 });
