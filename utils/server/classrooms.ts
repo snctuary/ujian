@@ -27,11 +27,16 @@ export async function addClassroomMember(classroomId: string, userId: string) {
 	}
 }
 
-export async function createClassroom(name: string, homeroomTeacherId: string) {
+export async function createClassroom(
+	name: string,
+	homeroomTeacherId: string,
+	description?: string,
+) {
 	const id = snowflake();
 	const newClass: Classroom = {
 		id,
 		name,
+		description,
 		homeroomTeacherId,
 	};
 
@@ -177,6 +182,7 @@ export async function retrieveJoinedClassrooms(
 export interface Classroom {
 	id: string;
 	name: string;
+	description?: string;
 	homeroomTeacherId: string;
 }
 export interface ClassroomWithHomeroomTeacher extends Classroom {

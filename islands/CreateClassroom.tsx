@@ -6,6 +6,7 @@ import { handleCsrf } from "~/utils/client/csrf.ts";
 
 export function CreateClassroom() {
 	const [name, setName] = useState<string>();
+	const [description, setDescription] = useState<string>();
 	const [submitting, setSubmitting] = useState<boolean>(false);
 	const csrfToken = handleCsrf();
 
@@ -14,6 +15,7 @@ export function CreateClassroom() {
 			setSubmitting(true);
 			const data: CreateClassroomData = {
 				name,
+				description,
 			};
 			const body = JSON.stringify(data);
 			const classroom = await makeRequest<Classroom>("/api/classrooms", {
@@ -37,6 +39,12 @@ export function CreateClassroom() {
 					class="bg-slate-100 p-2 rounded-lg font-extrabold outline-none"
 					id="name"
 					onInput={(input) => setName(input.currentTarget.value)}
+				/>
+				<label class="font-bold mt-4" for="name">Class Description</label>
+				<textarea
+					class="bg-slate-100 p-2 resize-none rounded-lg font-bold outline-none"
+					id="description"
+					onInput={(input) => setDescription(input.currentTarget.value)}
 				/>
 			</div>
 			<button
