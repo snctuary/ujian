@@ -8,11 +8,11 @@ interface Props {
 
 export function ClassroomMemberItem({ user }: Props) {
 	return (
-		<div class="flex items-center p-2 rounded-lg hover:bg-slate-100 group transition-all ease-in-out duration-150">
+		<div class="flex items-center p-2 rounded-lg hover:bg-gray-200 group transition-all ease-in-out duration-150">
 			<div class="flex items-center gap-2">
 				<div class="size-10 rounded-full bg-slate-100">
 				</div>
-				<p class="text-black">{user.username}</p>
+				<p class="text-black font-semibold">{user.username}</p>
 			</div>
 		</div>
 	);

@@ -11,9 +11,9 @@ export default define.page((ctx) => {
 	const classroom = ctx.state.classroom!;
 
 	return (
-		<div class="flex flex-col h-full p-4 gap-4">
+		<div class="flex flex-col h-full p-4 gap-4 select-none">
 			<Back label={classroom.name} path="/classrooms" />
-			<div class="flex flex-col">
+			<div class="flex flex-col gap-2">
 				<p class="font-extrabold text-4xl">{classroom.name}</p>
 				<div class="flex items-center gap-2">
 					<div class="bg-slate-100 size-8 rounded-full"></div>
