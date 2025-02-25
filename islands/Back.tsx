@@ -7,6 +7,7 @@ export function Back({ label, path }: Props) {
 	return (
 		<div>
 			<button
+				type="button"
 				class="flex items-center gap-2 p-3 bg-slate-100 hover:bg-slate-200 rounded-full transition-all ease-in-out duration-150"
 				onClick={() => {
 					globalThis.location.href = path;

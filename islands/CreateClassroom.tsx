@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { makeRequest } from "~/utils/client/makeRequest.ts";
 import { Classroom } from "~/utils/server/classrooms.ts";
 import { CreateClassroomData } from "~/routes/api/classrooms/index.ts";
@@ -8,10 +8,12 @@ export function CreateClassroom() {
 	const [name, setName] = useState<string>();
 	const [description, setDescription] = useState<string>();
 	const [submitting, setSubmitting] = useState<boolean>(false);
-	const csrfToken = handleCsrf();
+	const [csrf, setCsrf] = useState<string>();
+
+	useEffect(() => handleCsrf(setCsrf), []);
 
 	async function createClassroom() {
-		if (name && csrfToken) {
+		if (name && csrf) {
 			setSubmitting(true);
 			const data: CreateClassroomData = {
 				name,
@@ -21,7 +23,7 @@ export function CreateClassroom() {
 			const classroom = await makeRequest<Classroom>("/api/classrooms", {
 				method: "POST",
 				body,
-				csrfToken,
+				csrfToken: csrf,
 			});
 
 			if (classroom) {
@@ -48,6 +50,7 @@ export function CreateClassroom() {
 				/>
 			</div>
 			<button
+				type="button"
 				class="flex justify-center text-white bg-[#131313] rounded-xl p-2 font-extrabold disabled:opacity-50 transition-alll ease-in-out duration-150"
 				disabled={!name || submitting}
 				onClick={() => createClassroom()}

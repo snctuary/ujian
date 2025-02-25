@@ -1,4 +1,3 @@
-import { useEffect, useState } from "preact/hooks";
 import { createToken } from "~/utils/server/session.ts";
 
 async function retrieveCsrfToken(stateUpdater: (value: string) => void) {
@@ -6,19 +5,14 @@ async function retrieveCsrfToken(stateUpdater: (value: string) => void) {
 	if (response.ok) {
 		const csrfToken: Awaited<ReturnType<typeof createToken>> = await response
 			.json();
-		stateUpdater(csrfToken.data);
+		return stateUpdater(csrfToken.data);
 	}
 }
 
-export function handleCsrf() {
-	const [csrfToken, setCsrfToken] = useState<string>();
-
-	useEffect(() => {
-		retrieveCsrfToken(setCsrfToken);
-		setInterval(() => {
-			retrieveCsrfToken(setCsrfToken);
-		}, 5 * 60_000);
-	}, []);
-
-	return csrfToken;
+export function handleCsrf(stateUpdater: (value: string) => void) {
+	retrieveCsrfToken(stateUpdater);
+	setInterval(
+		() => retrieveCsrfToken(stateUpdater),
+		5 * 60 * 1_000,
+	);
 }

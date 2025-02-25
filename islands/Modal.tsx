@@ -19,6 +19,7 @@ export function Modal({ children, open, stateUpdater, title }: Props) {
 						<p class="font-bold text-2xl">{title}</p>
 					</div>
 					<button
+						type="button"
 						class="flex justify-center items-center rounded-lg hover:bg-slate-100 hover:fill-red-500 p-2 transition-all ease-in-out duration-200"
 						onClick={() => stateUpdater(false)}
 					>

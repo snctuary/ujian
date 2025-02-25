@@ -63,7 +63,7 @@ export function ClassroomListV2({ classrooms }: Props) {
 					</svg>
 				</div>
 				<div data-open={open} class="data-[open=true]:relative">
-					<button onClick={() => setOpen(!open)}>
+					<button type="button" onClick={() => setOpen(!open)}>
 						<div class="flex justify-center items-center bg-slate-100 hover:bg-slate-200 rounded-lg size-12 transition-all ease-in-out duration-150">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -88,6 +88,7 @@ export function ClassroomListV2({ classrooms }: Props) {
 						class="flex-col hidden data-[open=true]:flex bg-[#f7f7f7] fill-slate-500 font-semibold text-slate-400 text-sm w-56 p-4 rounded-lg shadow-md absolute right-0 mt-2 transition-opacity ease-in-out duration-150"
 					>
 						<button
+							type="button"
 							class="flex items-center gap-3 hover:bg-gray-200 hover:text-slate-500 p-1.5 rounded-lg transition-all ease-out duration-300"
 							onClick={() => {
 								setOpen(false);
