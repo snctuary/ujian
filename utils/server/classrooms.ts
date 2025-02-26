@@ -1,12 +1,17 @@
 import { snowflake } from "~/utils/server/snowflake.ts";
 import { kv } from "~/utils/server/core.ts";
 import { retrieveUser, User } from "~/utils/server/user.ts";
+import { hasFlags } from "~/utils/server/flags.ts";
 
-export async function addClassroomMember(classroomId: string, userId: string) {
+export async function addClassroomMember(
+	classroomId: string,
+	userId: string,
+	flags?: ClassroomMemberFlags,
+) {
 	const classroom = await retrieveClassroom(classroomId, true);
 
 	const newMember: ClassroomMember = {
-		flags: ClassroomMemberFlags.Student,
+		flags: flags ?? ClassroomMemberFlags.Student,
 		userId,
 	};
 	const joinedClassrooms = await retrieveJoinedClassrooms(userId);
@@ -45,10 +50,50 @@ export async function createClassroom(
 
 	if (commit.ok) {
 		try {
-			await addClassroomMember(newClass.id, homeroomTeacherId);
+			await addClassroomMember(
+				newClass.id,
+				homeroomTeacherId,
+				ClassroomMemberFlags.HomeroomTeacher,
+			);
 			return newClass;
 		} catch (_) {
 			await deleteClassroom(newClass.id);
+		}
+	}
+}
+
+export async function createClassroomTest(
+	classroomId: string,
+	authorId: string,
+	test: Omit<ClassroomTest, "id" | "authorId">,
+) {
+	const id = snowflake();
+	const newClassroomTest: ClassroomTest = {
+		id,
+		...test,
+		authorId,
+	};
+
+	const currentMember = await retrieveClassroomMember(classroomId, authorId);
+
+	if (!currentMember) {
+		throw new Error("Unknown Class");
+	} else {
+		if (!hasFlags(currentMember.flags, [ClassroomMemberFlags.Teacher])) {
+			throw new Error("You're not a teacher");
+		} else {
+			const commit = await kv.set([
+				"classrooms",
+				classroomId,
+				"tests",
+				newClassroomTest.id,
+			], newClassroomTest);
+
+			if (commit.ok) {
+				return newClassroomTest;
+			} else {
+				throw new Error("Failed to create new test");
+			}
 		}
 	}
 }
@@ -189,7 +234,7 @@ export interface ClassroomWithHomeroomTeacher extends Classroom {
 	homeroomTeacher: User;
 }
 
-enum ClassroomMemberFlags {
+export enum ClassroomMemberFlags {
 	None = 0,
 	HomeroomTeacher = 1 << 1,
 	Teacher = 1 << 2,
@@ -198,4 +243,19 @@ enum ClassroomMemberFlags {
 export interface ClassroomMember {
 	flags: ClassroomMemberFlags;
 	userId: string;
+}
+
+export interface ClassroomTest {
+	id: string;
+	title: string;
+	description: string;
+	authorId: string;
+	endAt: number;
+	quiz: ClassroomTestQuiz[];
+}
+
+export interface ClassroomTestQuiz {
+	question: string;
+	correctChoiceId: number;
+	choices: string[];
 }

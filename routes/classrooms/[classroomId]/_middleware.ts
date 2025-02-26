@@ -1,7 +1,7 @@
 import { define } from "~/utils/server/core.ts";
 import {
 	retrieveClassroom,
-	retrieveJoinedClassrooms,
+	retrieveClassroomMember,
 } from "~/utils/server/classrooms.ts";
 import { retrieveUser } from "~/utils/server/user.ts";
 import { HttpError } from "fresh";
@@ -11,9 +11,9 @@ export const handler = define.middleware(async (ctx) => {
 	const { classroomId } = ctx.params;
 	const user = ctx.state.user!;
 
-	const joinedClassrooms = await retrieveJoinedClassrooms(user.id);
+	const currentMember = await retrieveClassroomMember(classroomId, user.id);
 
-	if (joinedClassrooms.includes(classroomId)) {
+	if (currentMember) {
 		const classroom = await retrieveClassroom(classroomId);
 
 		if (classroom) {
@@ -21,7 +21,7 @@ export const handler = define.middleware(async (ctx) => {
 				classroom.homeroomTeacherId,
 				true,
 			);
-			ctx.state.classroom = { ...classroom, homeroomTeacher };
+			ctx.state.classroom = { ...classroom, currentMember, homeroomTeacher };
 
 			return await ctx.next();
 		}
