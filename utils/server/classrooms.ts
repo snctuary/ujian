@@ -65,7 +65,7 @@ export async function createClassroom(
 export async function createClassroomTest(
 	classroomId: string,
 	authorId: string,
-	test: Omit<ClassroomTest, "id" | "authorId">,
+	test: CreateClassroomTestData,
 ) {
 	const id = snowflake();
 	const newClassroomTest: ClassroomTest = {
@@ -259,3 +259,5 @@ export interface ClassroomTestQuiz {
 	correctChoiceId: number;
 	choices: string[];
 }
+
+export type CreateClassroomTestData = Omit<ClassroomTest, "id" | "authorId">;
