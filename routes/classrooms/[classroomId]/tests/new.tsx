@@ -33,12 +33,14 @@ export default define.page<typeof handler>((ctx) => {
 	const classroom = ctx.state.classroom!;
 
 	return (
-		<div class="flex flex-col py-4 gap-3 select-none relative overflow-y-auto no-scrollbar">
+		<div class="flex flex-col h-dvh py-4 gap-3 select-none relative">
 			<div class="flex items-center gap-2 px-4 backdrop-blur-md sticky top-0">
 				<Cancel redirectTo={`/classrooms/${classroom.id}/tests`} />
 				<p class="font-semibold text-lg">Create New Test</p>
 			</div>
-			<CreateClassroomTest classroomId={classroom.id} />
+			<div class="flex flex-col grow overflow-y-auto no-scrollbar">
+				<CreateClassroomTest classroomId={classroom.id} />
+			</div>
 		</div>
 	);
 });

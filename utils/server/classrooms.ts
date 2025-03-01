@@ -256,8 +256,12 @@ export interface ClassroomTest {
 
 export interface ClassroomTestQuiz {
 	question: string;
-	correctChoiceId: number;
-	choices: string[];
+	choices: ClassroomTestQuizChoice[];
+}
+
+export interface ClassroomTestQuizChoice {
+	correctChoice: boolean;
+	value: string;
 }
 
 export type CreateClassroomTestData = Omit<ClassroomTest, "id" | "authorId">;
