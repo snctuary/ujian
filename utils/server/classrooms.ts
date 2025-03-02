@@ -64,22 +64,23 @@ export async function createClassroom(
 
 export async function createClassroomTest(
 	classroomId: string,
-	authorId: string,
+	author: ClassroomMember,
 	test: CreateClassroomTestData,
 ) {
 	const id = snowflake();
 	const newClassroomTest: ClassroomTest = {
 		id,
 		...test,
-		authorId,
+		authorId: author.userId,
 	};
 
-	const currentMember = await retrieveClassroomMember(classroomId, authorId);
-
-	if (!currentMember) {
+	if (!author) {
 		throw new Error("Unknown Class");
 	} else {
-		if (!hasFlags(currentMember.flags, [ClassroomMemberFlags.Teacher])) {
+		if (
+			!hasFlags(author.flags, [ClassroomMemberFlags.Teacher]) &&
+			!hasFlags(author.flags, [ClassroomMemberFlags.HomeroomTeacher])
+		) {
 			throw new Error("You're not a teacher");
 		} else {
 			const commit = await kv.set([
@@ -198,6 +199,19 @@ export async function retrieveClassroomMembers(
 	}
 }
 
+export async function retrieveClassroomTest(
+	classroomId: string,
+	testId: string,
+) {
+	const test = await kv.get<ClassroomTest>([
+		"classrooms",
+		classroomId,
+		"tests",
+		testId,
+	]);
+	return test.value;
+}
+
 export async function retrieveJoinedClassrooms(
 	userId: string,
 	fullData: true,
@@ -248,9 +262,9 @@ export interface ClassroomMember {
 export interface ClassroomTest {
 	id: string;
 	title: string;
-	description: string;
+	description?: string;
 	authorId: string;
-	endAt: number;
+	endAt?: number;
 	quiz: ClassroomTestQuiz[];
 }
 
