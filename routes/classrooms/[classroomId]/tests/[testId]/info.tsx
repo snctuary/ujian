@@ -32,7 +32,7 @@ export default define.page((ctx) => {
 					{test.description ?? "No description set for this test."}
 				</p>
 				<p class="mt-4 font-semibold text-sm">Details</p>
-				<div class="flex flex-col bg-slate-200 rounded-3xl text-sm font-semibold p-3 mt-1">
+				<div class="flex flex-col bg-slate-100 rounded-3xl text-sm font-semibold p-3 mt-1">
 					<div class="flex justify-between">
 						<p>Total Questions</p>
 						<p class="text-slate-500">{test.quiz.length} Questions</p>
@@ -42,7 +42,7 @@ export default define.page((ctx) => {
 			<div class="flex w-full">
 				<button
 					type="button"
-					class="flex w-full justify-center items-center p-3 gap-3 fill-current text-white font-semibold bg-black rounded-full"
+					class="flex w-full justify-center items-center p-3 gap-3 fill-current text-white hover:text-black font-semibold bg-black hover:bg-white border-2 border-black rounded-full transition-all ease-in-out duration-75"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
