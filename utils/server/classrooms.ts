@@ -118,7 +118,9 @@ export async function randomizeClassroomTestQuestions(
 			"randomized",
 			studentId,
 		];
-		const randomized = await kv.get<ClassroomTestQuestionOrder>(randomizedKey);
+		const randomized = await kv.get<ClassroomTestQuestionOrder[]>(
+			randomizedKey,
+		);
 
 		if (randomized.value) {
 			return randomized.value;
