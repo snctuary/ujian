@@ -34,6 +34,7 @@
     "jsr:@std/path@1": "1.0.8",
     "jsr:@std/path@^1.0.6": "1.0.8",
     "jsr:@std/path@^1.0.8": "1.0.8",
+    "jsr:@std/random@0.1": "0.1.0",
     "jsr:@std/semver@1": "1.0.3",
     "jsr:@std/streams@^1.0.9": "1.0.9",
     "npm:@opentelemetry/api@^1.9.0": "1.9.0",
@@ -200,6 +201,9 @@
     },
     "@std/path@1.0.8": {
       "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
+    },
+    "@std/random@0.1.0": {
+      "integrity": "70a006be0ffb77d036bab54aa8ae6bd0119ba77ace0f2f56f63273d4262a5667"
     },
     "@std/semver@1.0.3": {
       "integrity": "7c139c6076a080eeaa4252c78b95ca5302818d7eafab0470d34cafd9930c13c8"
@@ -1377,6 +1381,7 @@
       "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7",
       "jsr:@gz/jwt@0.1",
       "jsr:@std/http@^1.0.13",
+      "jsr:@std/random@0.1",
       "npm:@preact/signals@^2.0.1",
       "npm:@sapphire/snowflake@^3.5.5",
       "npm:preact@^10.25.4",

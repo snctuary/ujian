@@ -2,6 +2,7 @@ import { snowflake } from "~/utils/server/snowflake.ts";
 import { kv } from "~/utils/server/core.ts";
 import { retrieveUser, User } from "~/utils/server/user.ts";
 import { hasFlags } from "~/utils/server/flags.ts";
+import { shuffle } from "@std/random/shuffle";
 
 export async function addClassroomMember(
 	classroomId: string,
@@ -94,6 +95,51 @@ export async function createClassroomTest(
 				return newClassroomTest;
 			} else {
 				throw new Error("Failed to create new test");
+			}
+		}
+	}
+}
+
+export async function randomizeClassroomTestQuestions(
+	classroomId: string,
+	testId: string,
+	studentId: string,
+) {
+	const test = await retrieveClassroomTest(classroomId, testId);
+
+	if (!test) {
+		throw new Error("Unknown Test");
+	} else {
+		const randomizedKey = [
+			"classrooms",
+			classroomId,
+			"tests",
+			testId,
+			"randomized",
+			studentId,
+		];
+		const randomized = await kv.get<ClassroomTestQuestionOrder>(randomizedKey);
+
+		if (randomized.value) {
+			return randomized.value;
+		} else {
+			const randomized: ClassroomTestQuestionOrder[] = shuffle(test.quiz).map((
+				question,
+				questionOrder,
+			) => ({
+				questionId: test.quiz.indexOf(question),
+				order: questionOrder,
+				choices: shuffle(question.choices).map((choice, choiceOrder) => ({
+					choiceId: question.choices.indexOf(choice),
+					order: choiceOrder,
+				})),
+			}));
+			const commit = await kv.set(randomizedKey, randomized);
+
+			if (commit.ok) {
+				return randomized;
+			} else {
+				throw new Error("Failed to randomize questions.");
 			}
 		}
 	}
@@ -212,6 +258,22 @@ export async function retrieveClassroomTest(
 	return test.value;
 }
 
+export async function retrieveClassroomTestResponse(
+	classroomId: string,
+	testId: string,
+	studentId: string,
+) {
+	const response = await kv.get([
+		"classrooms",
+		classroomId,
+		"tests",
+		testId,
+		"responses",
+		studentId,
+	]);
+	return response.value;
+}
+
 export async function retrieveJoinedClassrooms(
 	userId: string,
 	fullData: true,
@@ -278,4 +340,15 @@ export interface ClassroomTestQuizChoice {
 	value: string;
 }
 
+export interface ClassroomTestQuestionOrder {
+	questionId: number;
+	order: number;
+	choices: ClassroomTestChoiceOrder[];
+}
+export interface ClassroomTestChoiceOrder {
+	choiceId: number;
+	order: number;
+}
+
 export type CreateClassroomTestData = Omit<ClassroomTest, "id" | "authorId">;
+export type ClassroomTestRandomizedOrder = ClassroomTestQuestionOrder[];
