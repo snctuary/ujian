@@ -198,6 +198,7 @@ export function CreateClassroomTest({ classroomId }: Props) {
 						<div class="mt-4">
 							<button
 								class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 fill-current text-slate-500 p-3 rounded-xl"
+								disabled={!!question.choices.find((c) => c.value.trim() === "")}
 								onClick={() =>
 									setQuestions(
 										questions.with(questionId, {
