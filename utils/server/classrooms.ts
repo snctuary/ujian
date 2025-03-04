@@ -134,7 +134,7 @@ export async function isAlreadySubmitTestResponses(
 	classroomId: string,
 	testId: string,
 	studentId: string,
-) {
+): Promise<boolean> {
 	const result = await kv.atomic().check({
 		key: [
 			"classrooms",
