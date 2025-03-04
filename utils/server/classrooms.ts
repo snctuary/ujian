@@ -100,6 +100,36 @@ export async function createClassroomTest(
 	}
 }
 
+export async function createClassroomTestResponse(
+	classroomId: string,
+	testId: string,
+	studentId: string,
+	responses: ClassroomTestResponses,
+) {
+	const submittedResponses = await retrieveClassroomTestResponse(
+		classroomId,
+		testId,
+		studentId,
+	);
+
+	if (submittedResponses) {
+		throw new Error("This student already submitted a response");
+	} else {
+		const commit = await kv.set([
+			"classrooms",
+			classroomId,
+			"tests",
+			testId,
+			"responses",
+			studentId,
+		], responses);
+
+		if (!commit.ok) {
+			throw new Error("Failed to proceed");
+		}
+	}
+}
+
 export async function randomizeClassroomTestQuestions(
 	classroomId: string,
 	testId: string,
@@ -265,7 +295,7 @@ export async function retrieveClassroomTestResponse(
 	testId: string,
 	studentId: string,
 ) {
-	const response = await kv.get([
+	const response = await kv.get<ClassroomTestResponses>([
 		"classrooms",
 		classroomId,
 		"tests",
@@ -354,3 +384,4 @@ export interface ClassroomTestChoiceOrder {
 
 export type CreateClassroomTestData = Omit<ClassroomTest, "id" | "authorId">;
 export type ClassroomTestRandomizedOrder = ClassroomTestQuestionOrder[];
+export type ClassroomTestResponses = number[];
