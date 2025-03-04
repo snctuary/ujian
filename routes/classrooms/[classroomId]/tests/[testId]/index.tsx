@@ -5,6 +5,7 @@ import {
 	retrieveClassroomTestResponse,
 } from "~/utils/server/classrooms.ts";
 import { page, RouteConfig } from "fresh";
+import { ClassroomTestForm } from "~/islands/ClassroomTestForm.tsx";
 
 export const config: RouteConfig = {
 	skipInheritedLayouts: true,
@@ -43,4 +44,8 @@ export const handler = define.handlers({
 			return ctx.redirect(`/classrooms/${classroom.id}/tests`);
 		}
 	},
+});
+
+export default define.page<typeof handler>(({ data }) => {
+	return <ClassroomTestForm questions={data} />;
 });
