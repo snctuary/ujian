@@ -1,3 +1,5 @@
+import { STATUS_CODE } from "@std/http/status";
+
 interface RequestOptions {
 	csrfToken: string;
 	method?: string;
@@ -5,7 +7,7 @@ interface RequestOptions {
 	headers?: Record<string, string>;
 }
 
-export async function makeRequest<T = void>(
+export async function makeRequest<T = unknown>(
 	route: `/${string}`,
 	{ csrfToken, body, method, headers }: RequestOptions,
 ) {
@@ -19,7 +21,13 @@ export async function makeRequest<T = void>(
 	});
 
 	if (response.ok) {
-		const data: T = await response.json();
-		return data;
+		let data: T | null = null;
+
+		if (response.status !== STATUS_CODE.NoContent) {
+			data = await response.json();
+		}
+		return { data, ok: response.ok };
+	} else {
+		throw new Error(response.statusText);
 	}
 }

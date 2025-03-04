@@ -1,16 +1,40 @@
 import { ClassroomTestQuiz } from "~/utils/server/classrooms.ts";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
+import { handleCsrf } from "~/utils/client/csrf.ts";
+import { makeRequest } from "~/utils/client/makeRequest.ts";
 
 interface Props {
+	classroommId: string;
+	testId: string;
 	questions: ClassroomTestQuiz[];
 }
 
-export function ClassroomTestForm({ questions }: Props) {
+export function ClassroomTestForm({ classroommId, testId, questions }: Props) {
 	const [currentQuestion, setCurrentQuestion] = useState<number>(0);
 	const [choices, setChoices] = useState<(number | null)[]>(
 		questions.map((_) => null),
 	);
 	const completed = !choices.includes(null);
+	const [csrf, setCsrf] = useState<string>();
+
+	useEffect(() => handleCsrf(setCsrf), []);
+
+	async function submitResponse() {
+		if (completed && csrf) {
+			const response = await makeRequest(
+				`/api/classrooms/${classroommId}/tests/${testId}/responses`,
+				{
+					method: "POST",
+					body: JSON.stringify(choices),
+					csrfToken: csrf,
+				},
+			);
+
+			if (response.ok) {
+				globalThis.location.href += "/info";
+			}
+		}
+	}
 
 	return (
 		<div class="flex flex-col justify-center items-center min-h-full overflow-y-auto no-scrollbar p-4">
@@ -52,6 +76,7 @@ export function ClassroomTestForm({ questions }: Props) {
 					</div>
 					<button
 						class="fill-red-500 disabled:opacity-25"
+						onClick={() => submitResponse()}
 						disabled={!completed}
 						type="button"
 					>

@@ -130,6 +130,26 @@ export async function createClassroomTestResponse(
 	}
 }
 
+export async function isAlreadySubmitTestResponses(
+	classroomId: string,
+	testId: string,
+	studentId: string,
+) {
+	const result = await kv.atomic().check({
+		key: [
+			"classrooms",
+			classroomId,
+			"tests",
+			testId,
+			"responses",
+			studentId,
+		],
+		versionstamp: null,
+	}).commit();
+
+	return !result.ok;
+}
+
 export async function randomizeClassroomTestQuestions(
 	classroomId: string,
 	testId: string,

@@ -26,8 +26,8 @@ export function CreateClassroom() {
 				csrfToken: csrf,
 			});
 
-			if (classroom) {
-				globalThis.location.href = `/classrooms/${classroom.id}/overview`;
+			if (classroom.data) {
+				globalThis.location.href = `/classrooms/${classroom.data.id}/overview`;
 			}
 			setSubmitting(false);
 		}

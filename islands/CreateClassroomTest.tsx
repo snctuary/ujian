@@ -35,8 +35,9 @@ export function CreateClassroomTest({ classroomId }: Props) {
 			);
 
 			if (newTest) {
-				globalThis.location.href =
-					`/classrooms/${classroomId}/tests/${newTest.id}/info`;
+				globalThis.location.href = `/classrooms/${classroomId}/tests/${
+					newTest.data!.id
+				}/info`;
 			}
 		}
 	}

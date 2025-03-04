@@ -41,11 +41,17 @@ export const handler = define.handlers({
 			});
 			return page(questions);
 		} else {
-			return ctx.redirect(`/classrooms/${classroom.id}/tests`);
+			return ctx.redirect(ctx.url.pathname + "/info");
 		}
 	},
 });
 
-export default define.page<typeof handler>(({ data }) => {
-	return <ClassroomTestForm questions={data} />;
+export default define.page<typeof handler>(({ data, state }) => {
+	return (
+		<ClassroomTestForm
+			classroommId={state.classroom!.id}
+			testId={state.classroomTest!.id}
+			questions={data}
+		/>
+	);
 });

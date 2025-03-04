@@ -1,14 +1,31 @@
-import { RouteConfig } from "fresh";
+import { page, RouteConfig } from "fresh";
 import { define } from "~/utils/server/core.ts";
 import { Cancel } from "~/islands/Cancel.tsx";
+import { isAlreadySubmitTestResponses } from "~/utils/server/classrooms.ts";
 
 export const config: RouteConfig = {
 	skipInheritedLayouts: true,
 };
 
-export default define.page((ctx) => {
+export const handler = define.handlers({
+	async GET(ctx) {
+		const classroom = ctx.state.classroom!;
+		const test = ctx.state.classroomTest!;
+
+		const alreadySubmit = await isAlreadySubmitTestResponses(
+			classroom.id,
+			test.id,
+			classroom.currentMember.userId,
+		);
+		return page({ alreadySubmit });
+	},
+});
+
+export default define.page<typeof handler>((ctx) => {
 	const classroom = ctx.state.classroom!;
 	const test = ctx.state.classroomTest!;
+
+	const { alreadySubmit } = ctx.data;
 
 	return (
 		<div class="flex flex-col h-dvh p-4 relative">
@@ -41,8 +58,9 @@ export default define.page((ctx) => {
 			</div>
 			<div class="flex w-full">
 				<button
+					class="flex w-full justify-center items-center p-3 gap-3 fill-current text-white disabled:hover:text-white hover:text-black font-semibold bg-black disabled:hover:bg-black hover:bg-white border-2 border-black rounded-full transition-all ease-in-out duration-75 disabled:opacity-25"
+					disabled={alreadySubmit}
 					type="button"
-					class="flex w-full justify-center items-center p-3 gap-3 fill-current text-white hover:text-black font-semibold bg-black hover:bg-white border-2 border-black rounded-full transition-all ease-in-out duration-75"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
