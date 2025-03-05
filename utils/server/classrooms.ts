@@ -89,6 +89,7 @@ export async function createClassroomTest(
 				classroomId,
 				"tests",
 				newClassroomTest.id,
+				"data",
 			], newClassroomTest);
 
 			if (commit.ok) {
@@ -217,6 +218,15 @@ export async function fetchClassrooms(classroomIds: string[]) {
 	}));
 }
 
+export async function fetchClassroomTest(classroomId: string) {
+	const data = await Array.fromAsync(
+		kv.list<ClassroomTest>({ prefix: ["classrooms", classroomId, "tests"] }),
+	);
+	return data.filter((test) => test.key.at(-1) === "data").map((test) =>
+		test.value
+	);
+}
+
 export async function deleteClassroom(classroomId: string) {
 	const classroom = await retrieveClassroom(classroomId, true);
 
@@ -306,6 +316,7 @@ export async function retrieveClassroomTest(
 		classroomId,
 		"tests",
 		testId,
+		"data",
 	]);
 	return test.value;
 }
