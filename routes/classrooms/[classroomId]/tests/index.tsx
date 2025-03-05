@@ -18,6 +18,30 @@ export default define.page<typeof handler>((ctx) => {
 
 	return (
 		<Partial name="content">
+			<div class="flex mb-4" f-client-nav={false}>
+				<a
+					class="flex grow gap-2 items-center bg-black text-white font-semibold fill-current px-4 py-2 rounded-lg"
+					href={ctx.url.pathname + "/new"}
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						version="1.1"
+						id="Capa_1"
+						x="0px"
+						y="0px"
+						viewBox="0 0 512 512"
+						style="enable-background:new 0 0 512 512;"
+						xml:space="preserve"
+						width="18"
+						height="18"
+					>
+						<g>
+							<path d="M480,224H288V32c0-17.673-14.327-32-32-32s-32,14.327-32,32v192H32c-17.673,0-32,14.327-32,32s14.327,32,32,32h192v192   c0,17.673,14.327,32,32,32s32-14.327,32-32V288h192c17.673,0,32-14.327,32-32S497.673,224,480,224z" />
+						</g>
+					</svg>
+					<p>Create Test</p>
+				</a>
+			</div>
 			{fetchedTest.map((test) => (
 				<a
 					href={`/classrooms/${classroom.id}/tests/${test.id}/info`}
