@@ -250,6 +250,11 @@ export async function fetchClassroomTest(classroomId: string) {
 	);
 }
 
+export async function findClassroomByInvite(inviteCode: string) {
+	const classroomId = await kv.get<string>(["invites", inviteCode]);
+	return classroomId.value;
+}
+
 export async function deleteClassroom(classroomId: string) {
 	const classroom = await retrieveClassroom(classroomId, true);
 

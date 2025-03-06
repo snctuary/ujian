@@ -82,7 +82,9 @@ export function InviteMember({ classroomId }: Props) {
 							disabled={copied}
 							onClick={() => {
 								if (IS_BROWSER && inviteCode) {
-									navigator.clipboard.writeText(inviteCode);
+									navigator.clipboard.writeText(
+										`${globalThis.location.host}/join/${inviteCode}`,
+									);
 									setCopied(true);
 								}
 							}}
