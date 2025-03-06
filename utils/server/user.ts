@@ -1,6 +1,7 @@
 import { kv } from "~/utils/server/core.ts";
 import { snowflake } from "~/utils/server/snowflake.ts";
 import { hash } from "@bronti/bcrypt";
+import { cleanContent } from "~/utils/server/cleanContent.ts";
 
 interface CreateUserOptions extends Omit<User, "avatar" | "id"> {
 	avatar?: Blob;
@@ -12,7 +13,8 @@ export async function createUser(
 	const id = snowflake();
 	const newUser: User = {
 		id,
-		username,
+		// TODO: create username regexp
+		username: cleanContent(username),
 	};
 
 	if (avatar) {

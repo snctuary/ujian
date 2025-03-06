@@ -4,6 +4,7 @@ import { retrieveUser, User } from "~/utils/server/user.ts";
 import { hasFlags } from "~/utils/server/flags.ts";
 import { shuffle } from "@std/random/shuffle";
 import { nanoid } from "nanoid";
+import { cleanContent } from "~/utils/server/cleanContent.ts";
 
 export async function addClassroomMember(
 	classroomId: string,
@@ -42,8 +43,8 @@ export async function createClassroom(
 	const id = snowflake();
 	const newClass: Classroom = {
 		id,
-		name,
-		description,
+		name: cleanContent(name),
+		description: cleanContent(description ?? ""),
 		homeroomTeacherId,
 	};
 
@@ -89,7 +90,14 @@ export async function createClassroomTest(
 	const id = snowflake();
 	const newClassroomTest: ClassroomTest = {
 		id,
-		...test,
+		title: cleanContent(test.title),
+		quiz: test.quiz.map((quiz) => ({
+			question: cleanContent(quiz.question),
+			choices: quiz.choices.map((choice) => ({
+				...choice,
+				value: cleanContent(choice.value),
+			})),
+		})),
 		authorId: author.userId,
 	};
 
