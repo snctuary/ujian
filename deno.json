@@ -25,7 +25,7 @@
 		"**/_fresh/*"
 	],
 	"imports": {
-		"@felix/bcrypt": "jsr:@felix/bcrypt@^1.0.5",
+		"@bronti/bcrypt": "jsr:@bronti/bcrypt@^1.0.3",
 		"@gz/jwt": "jsr:@gz/jwt@^0.1.0",
 		"@sapphire/snowflake": "npm:@sapphire/snowflake@^3.5.5",
 		"@std/random": "jsr:@std/random@^0.1.0",

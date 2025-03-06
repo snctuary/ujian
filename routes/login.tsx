@@ -3,7 +3,7 @@ import { define } from "~/utils/server/core.ts";
 import { EntryForm } from "~/islands/EntryForm.tsx";
 import { STATUS_CODE } from "@std/http/status";
 import { retrievePassword, searchUser } from "~/utils/server/user.ts";
-import { verify } from "@felix/bcrypt";
+import { verify } from "@bronti/bcrypt";
 import { createSession } from "~/utils/server/session.ts";
 
 export const config: RouteConfig = {

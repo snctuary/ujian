@@ -1,6 +1,6 @@
 import { kv } from "~/utils/server/core.ts";
 import { snowflake } from "~/utils/server/snowflake.ts";
-import { hash } from "@felix/bcrypt";
+import { hash } from "@bronti/bcrypt";
 
 interface CreateUserOptions extends Omit<User, "avatar" | "id"> {
 	avatar?: Blob;
