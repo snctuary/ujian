@@ -1,3 +1,4 @@
+import { IS_BROWSER } from "fresh/runtime";
 import { useEffect, useState } from "preact/hooks";
 import { handleCsrf } from "~/utils/client/csrf.ts";
 import { makeRequest } from "~/utils/client/makeRequest.ts";
@@ -9,6 +10,7 @@ interface Props {
 
 export function InviteMember({ classroomId }: Props) {
 	const [open, setOpen] = useState<boolean>(false);
+	const [copied, setCopied] = useState<boolean>(false);
 	const [inviteCode, setInviteCode] = useState<string>();
 
 	const [csrf, setCsrf] = useState<string>();
@@ -42,6 +44,7 @@ export function InviteMember({ classroomId }: Props) {
 			}
 
 			setOpen(!open);
+			setCopied(open);
 		}
 	}
 
@@ -75,19 +78,47 @@ export function InviteMember({ classroomId }: Props) {
 					<div class="flex w-full justify-center items-center bg-slate-100 p-2 font-semibold rounded-lg relative group">
 						<p>{inviteCode}</p>
 						<button
-							class="absolute right-3 opacity-0 group-hover:opacity-100 transition-all ease-in-out duration-150"
+							class="absolute right-3 fill-slate-500 disabled:fill-green-500 opacity-0 group-hover:opacity-100 transition-all ease-in-out duration-150"
+							disabled={copied}
+							onClick={() => {
+								if (IS_BROWSER && inviteCode) {
+									navigator.clipboard.writeText(inviteCode);
+									setCopied(true);
+								}
+							}}
 							type="button"
 						>
-							<svg
-								id="Layer_1"
-								height="18"
-								viewBox="0 0 24 24"
-								width="18"
-								xmlns="http://www.w3.org/2000/svg"
-								data-name="Layer 1"
-							>
-								<path d="m13.5 19h-8a5.506 5.506 0 0 1 -5.5-5.5v-8a5.506 5.506 0 0 1 5.5-5.5h8a5.506 5.506 0 0 1 5.5 5.5v8a5.506 5.506 0 0 1 -5.5 5.5zm-8-16a2.5 2.5 0 0 0 -2.5 2.5v8a2.5 2.5 0 0 0 2.5 2.5h8a2.5 2.5 0 0 0 2.5-2.5v-8a2.5 2.5 0 0 0 -2.5-2.5zm18.5 15.5v-11.5a1.5 1.5 0 0 0 -3 0v11.5a2.5 2.5 0 0 1 -2.5 2.5h-11.5a1.5 1.5 0 0 0 0 3h11.5a5.506 5.506 0 0 0 5.5-5.5z" />
-							</svg>
+							{!copied
+								? (
+									<svg
+										id="Layer_1"
+										height="18"
+										viewBox="0 0 24 24"
+										width="18"
+										xmlns="http://www.w3.org/2000/svg"
+										data-name="Layer 1"
+									>
+										<path d="m13.5 19h-8a5.506 5.506 0 0 1 -5.5-5.5v-8a5.506 5.506 0 0 1 5.5-5.5h8a5.506 5.506 0 0 1 5.5 5.5v8a5.506 5.506 0 0 1 -5.5 5.5zm-8-16a2.5 2.5 0 0 0 -2.5 2.5v8a2.5 2.5 0 0 0 2.5 2.5h8a2.5 2.5 0 0 0 2.5-2.5v-8a2.5 2.5 0 0 0 -2.5-2.5zm18.5 15.5v-11.5a1.5 1.5 0 0 0 -3 0v11.5a2.5 2.5 0 0 1 -2.5 2.5h-11.5a1.5 1.5 0 0 0 0 3h11.5a5.506 5.506 0 0 0 5.5-5.5z" />
+									</svg>
+								)
+								: (
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										version="1.1"
+										id="Capa_1"
+										x="0px"
+										y="0px"
+										viewBox="0 0 507.506 507.506"
+										style="enable-background:new 0 0 507.506 507.506;"
+										xml:space="preserve"
+										width="18"
+										height="18"
+									>
+										<g>
+											<path d="M163.865,436.934c-14.406,0.006-28.222-5.72-38.4-15.915L9.369,304.966c-12.492-12.496-12.492-32.752,0-45.248l0,0   c12.496-12.492,32.752-12.492,45.248,0l109.248,109.248L452.889,79.942c12.496-12.492,32.752-12.492,45.248,0l0,0   c12.492,12.496,12.492,32.752,0,45.248L202.265,421.019C192.087,431.214,178.271,436.94,163.865,436.934z" />
+										</g>
+									</svg>
+								)}
 						</button>
 					</div>
 				</div>
