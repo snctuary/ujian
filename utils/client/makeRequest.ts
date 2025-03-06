@@ -28,6 +28,6 @@ export async function makeRequest<T = unknown>(
 		}
 		return { data, ok: response.ok };
 	} else {
-		throw new Error(response.statusText);
+		return { ok: false };
 	}
 }

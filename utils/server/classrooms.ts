@@ -396,6 +396,10 @@ export interface ClassroomWithHomeroomTeacher extends Classroom {
 	homeroomTeacher: User;
 }
 
+export interface ClassroomInvite {
+	inviteCode: string;
+}
+
 export enum ClassroomMemberFlags {
 	None = 0,
 	HomeroomTeacher = 1 << 1,

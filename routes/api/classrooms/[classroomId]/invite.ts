@@ -1,6 +1,7 @@
 import { define } from "~/utils/server/core.ts";
 import { hasFlags } from "~/utils/server/flags.ts";
 import {
+	ClassroomInvite,
 	ClassroomMemberFlags,
 	createClassroomInvite,
 	fetchClassroomInvite,
@@ -21,7 +22,7 @@ export const handler = define.handlers({
 			if (!inviteCode) {
 				throw new HttpError(STATUS_CODE.NotFound);
 			} else {
-				return Response.json({ inviteCode });
+				return Response.json({ inviteCode } satisfies ClassroomInvite);
 			}
 		}
 	},
@@ -33,7 +34,7 @@ export const handler = define.handlers({
 			throw new HttpError(STATUS_CODE.Forbidden);
 		} else {
 			const inviteCode = await createClassroomInvite(classroom.id);
-			return Response.json({ inviteCode });
+			return Response.json({ inviteCode } satisfies ClassroomInvite);
 		}
 	},
 });

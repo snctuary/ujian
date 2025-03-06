@@ -3,6 +3,7 @@ import { retrieveClassroomMembers } from "~/utils/server/classrooms.ts";
 import { page } from "fresh";
 import { Partial } from "fresh/runtime";
 import { ClassroomMemberItem } from "~/components/ClassroomMemberItem.tsx";
+import { InviteMember } from "~/islands/InviteMember.tsx";
 
 export const handler = define.handlers({
 	async GET(ctx) {
@@ -43,6 +44,7 @@ export default define.page<typeof handler>(({ data }) => {
 						</svg>
 						<input class="grow py-3 bg-transparent outline-none" size={1} />
 					</form>
+					<InviteMember classroomId={classroom.id} />
 				</div>
 				{members.map((member) => (
 					<ClassroomMemberItem member={member} user={member.user} />
