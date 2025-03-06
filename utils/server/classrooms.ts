@@ -3,6 +3,7 @@ import { kv } from "~/utils/server/core.ts";
 import { retrieveUser, User } from "~/utils/server/user.ts";
 import { hasFlags } from "~/utils/server/flags.ts";
 import { shuffle } from "@std/random/shuffle";
+import { nanoid } from "nanoid";
 
 export async function addClassroomMember(
 	classroomId: string,
@@ -60,6 +61,23 @@ export async function createClassroom(
 		} catch (_) {
 			await deleteClassroom(newClass.id);
 		}
+	}
+}
+
+export async function createClassroomInvite(classroomId: string) {
+	const inviteCode = nanoid(12);
+	const inviteKey = ["invites", inviteCode];
+
+	const commit = await kv.atomic().check({ key: inviteKey, versionstamp: null })
+		.set(inviteKey, classroomId).set(
+			["classrooms", classroomId, "invite"],
+			inviteCode,
+		).commit();
+
+	if (commit.ok) {
+		return inviteCode;
+	} else {
+		throw new Error("Failed to create invite");
 	}
 }
 
@@ -216,6 +234,11 @@ export async function fetchClassrooms(classroomIds: string[]) {
 		...classroom,
 		homeroomTeacher: users.get(classroom.homeroomTeacherId)!,
 	}));
+}
+
+export async function fetchClassroomInvite(classroomId: string) {
+	const invite = await kv.get<string>(["classrooms", classroomId, "invite"]);
+	return invite.value;
 }
 
 export async function fetchClassroomTest(classroomId: string) {

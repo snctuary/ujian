@@ -29,6 +29,7 @@
 		"@gz/jwt": "jsr:@gz/jwt@^0.1.0",
 		"@sapphire/snowflake": "npm:@sapphire/snowflake@^3.5.5",
 		"@std/random": "jsr:@std/random@^0.1.0",
+		"nanoid": "npm:nanoid@^5.1.2",
 		"tailwindcss": "npm:tailwindcss@3.4.3",
 		"~/": "./",
 		"fresh": "jsr:@fresh/core@^2.0.0-alpha.29",
