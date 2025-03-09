@@ -436,14 +436,21 @@ export async function searchMembers(
 	name: string,
 	fullData?: boolean,
 ) {
-	const fetchedMemberIds = await kv.get<string[]>([
-		"classrooms",
-		classroomId,
-		"members",
-		"byName",
-		name,
-	]);
-	const memberIds = fetchedMemberIds.value ?? [];
+	const memberIds = [];
+	for await (
+		const fetchedIds of kv.list<string[]>({
+			prefix: ["classrooms", classroomId, "members", "byName"],
+			start: ["classrooms", classroomId, "members", "byName", name],
+		})
+	) {
+		if (
+			fetchedIds.key.at(-1)?.toString().toLowerCase().startsWith(
+				name.toLowerCase(),
+			)
+		) {
+			memberIds.push(...fetchedIds.value);
+		}
+	}
 
 	if (fullData) {
 		const members = await Promise.all(
