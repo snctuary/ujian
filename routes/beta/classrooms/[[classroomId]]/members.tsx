@@ -1,6 +1,7 @@
 import { define } from "~/utils/server/core.ts";
 import { retrieveClassroomMembers } from "~/utils/server/classrooms.ts";
 import { page } from "fresh";
+import { memberRole } from "~/utils/client/memberRole.ts";
 
 export const handler = define.handlers({
 	async GET(ctx) {
@@ -8,14 +9,17 @@ export const handler = define.handlers({
 			ctx.state.currentClassroomId!,
 			true,
 		);
+
 		return page({ members });
 	},
 });
 
-export default define.page<typeof handler>((_ctx) => {
+export default define.page<typeof handler>(({ data }) => {
+	const { members } = data;
+
 	return (
-		<div class="flex flex-col grow relative gap-2">
-			<div class="flex justify-between gap-2">
+		<div class="flex flex-col grow relative gap-2 border border-gray-300 rounded-xl divide-y divide-gray-300">
+			<div class="flex justify-between gap-2 p-3">
 				<form class="flex items-center rounded-xl border border-gray-300 shadow-md relative overflow-hidden">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -33,12 +37,39 @@ export default define.page<typeof handler>((_ctx) => {
 						<path d="m21 21-4.3-4.3" />
 					</svg>
 					<input
-						class="outline-none pl-10 pr-3 py-2"
+						class="outline-none pl-10 pr-3 h-10"
 						name="query"
 						type="text"
 					/>
 				</form>
 			</div>
+			<table class="table-auto text-center">
+				<thead class="bg-gray-100 text-slate-500 border-y border-collapse border-gray-300 h-12">
+					<tr>
+						<th>Order</th>
+						<th>Name</th>
+						<th>Role</th>
+					</tr>
+				</thead>
+				<tbody>
+					{members.map((member, index) => (
+						<tr class="hover:bg-gray-50">
+							<td class="border-b border-gray-300 h-14 font-medium">
+								<p>#{index + 1}</p>
+							</td>
+							<td class="border-b border-gray-300 h-14">
+								<div class="flex justify-center items-center gap-2">
+									<div class="size-8 bg-gray-100 rounded-full"></div>
+									{member.user.username}
+								</div>
+							</td>
+							<td class="border-b border-gray-300 h-14">
+								{memberRole(member.flags)}
+							</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
 		</div>
 	);
 });

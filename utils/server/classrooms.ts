@@ -335,7 +335,7 @@ export async function retrieveClassroomMembers(
 			members.map((member) => retrieveUser(member.value.userId, true)),
 		);
 		return members.map((member, index) => ({
-			...member,
+			...member.value,
 			user: fetchedUsers.at(index)!,
 		}));
 	} else {

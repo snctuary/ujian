@@ -10,5 +10,9 @@ export const handler = define.handlers({
 });
 
 export default define.page((_ctx) => {
-	return <p>Select a classroom first</p>;
+	return (
+		<div class="flex justify-center items-center grow">
+			<p class="font-semibold text-gray-400 text-2xl">Select a classroom</p>
+		</div>
+	);
 });
