@@ -8,22 +8,27 @@ import { cleanContent } from "~/utils/server/cleanContent.ts";
 
 export async function addClassroomMember(
 	classroomId: string,
-	userId: string,
+	user: User,
 	flags?: ClassroomMemberFlags,
 ) {
 	const classroom = await retrieveClassroom(classroomId, true);
 
 	const newMember: ClassroomMember = {
 		flags: flags ?? ClassroomMemberFlags.Student,
-		userId,
+		userId: user.id,
 	};
-	const joinedClassrooms = await retrieveJoinedClassrooms(userId);
+	const joinedClassrooms = await retrieveJoinedClassrooms(user.id);
 
-	const memberKey = ["classrooms", classroomId, "members", userId];
+	const membersKey = ["classrooms", classroomId, "members"];
+	const membersWithSameName = await searchMembers(classroomId, user.username);
 	const commit = await kv.atomic().check({
-		key: memberKey,
+		key: [...membersKey, "byId", user.id],
 		versionstamp: null,
-	}).set(memberKey, newMember).set(["users", "classrooms", userId], [
+	}).set([...membersKey, "byId", user.id], newMember).set([
+		...membersKey,
+		"byName",
+		user.username,
+	], [...membersWithSameName, user.id]).set(["users", "classrooms", user.id], [
 		...joinedClassrooms,
 		classroom.id,
 	]).commit();
@@ -37,7 +42,7 @@ export async function addClassroomMember(
 
 export async function createClassroom(
 	name: string,
-	homeroomTeacherId: string,
+	homeroomTeacher: User,
 	description?: string,
 ) {
 	const id = snowflake();
@@ -45,7 +50,7 @@ export async function createClassroom(
 		id,
 		name: cleanContent(name),
 		description: cleanContent(description ?? ""),
-		homeroomTeacherId,
+		homeroomTeacherId: homeroomTeacher.id,
 	};
 
 	const commit = await kv.atomic().set(["classrooms", newClass.id], newClass)
@@ -55,7 +60,7 @@ export async function createClassroom(
 		try {
 			await addClassroomMember(
 				newClass.id,
-				homeroomTeacherId,
+				homeroomTeacher,
 				ClassroomMemberFlags.HomeroomTeacher,
 			);
 			return newClass;
@@ -302,13 +307,30 @@ export async function retrieveClassroom(
 export async function retrieveClassroomMember(
 	classroomId: string,
 	memberId: string,
+	required: true,
+): Promise<ClassroomMember>;
+export async function retrieveClassroomMember(
+	classroomId: string,
+	memberId: string,
+	required?: false,
+): Promise<ClassroomMember | null>;
+export async function retrieveClassroomMember(
+	classroomId: string,
+	memberId: string,
+	required?: boolean,
 ) {
 	const member = await kv.get<ClassroomMember>([
 		"classrooms",
 		classroomId,
 		"members",
+		"byId",
 		memberId,
 	]);
+
+	if (required && !member.value) {
+		throw new Error("Unknown Member");
+	}
+
 	return member.value;
 }
 
@@ -326,7 +348,7 @@ export async function retrieveClassroomMembers(
 ) {
 	const members = await Array.fromAsync(
 		kv.list<ClassroomMember>({
-			prefix: ["classrooms", classroomId, "members"],
+			prefix: ["classrooms", classroomId, "members", "byId"],
 		}),
 	);
 
@@ -396,6 +418,48 @@ export async function retrieveJoinedClassrooms(
 		return await fetchClassrooms(classrooms);
 	} else {
 		return classrooms;
+	}
+}
+
+export async function searchMembers(
+	classroomId: string,
+	name: string,
+	fullData: true,
+): Promise<(ClassroomMember & { user: User })[]>;
+export async function searchMembers(
+	classroomId: string,
+	name: string,
+	fullData?: false,
+): Promise<string[]>;
+export async function searchMembers(
+	classroomId: string,
+	name: string,
+	fullData?: boolean,
+) {
+	const fetchedMemberIds = await kv.get<string[]>([
+		"classrooms",
+		classroomId,
+		"members",
+		"byName",
+		name,
+	]);
+	const memberIds = fetchedMemberIds.value ?? [];
+
+	if (fullData) {
+		const members = await Promise.all(
+			memberIds.map((memberId) =>
+				retrieveClassroomMember(classroomId, memberId, true)
+			),
+		);
+		const fetchedUsers = await Promise.all(
+			members.map((member) => retrieveUser(member.userId, true)),
+		);
+		return members.map((member, index) => ({
+			...member,
+			user: fetchedUsers.at(index)!,
+		}));
+	} else {
+		return memberIds;
 	}
 }
 

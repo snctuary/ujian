@@ -29,7 +29,7 @@ export const handler = define.handlers({
 			if (member) {
 				return redirectToClassroom;
 			} else {
-				await addClassroomMember(classroom.id, user.id);
+				await addClassroomMember(classroom.id, user);
 				return redirectToClassroom;
 			}
 		}

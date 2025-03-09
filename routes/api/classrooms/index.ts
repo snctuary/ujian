@@ -13,7 +13,7 @@ export const handler = define.handlers({
 
 		const classroom = await createClassroom(
 			body.name,
-			homeroomTeacher.id,
+			homeroomTeacher,
 			body.description,
 		);
 		return Response.json(classroom);
