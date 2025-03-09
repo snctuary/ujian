@@ -404,6 +404,7 @@ export interface Classroom {
 	name: string;
 	description?: string;
 	homeroomTeacherId: string;
+	memberCount?: number;
 }
 export interface ClassroomWithHomeroomTeacher extends Classroom {
 	homeroomTeacher: User;

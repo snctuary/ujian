@@ -1,6 +1,7 @@
 import { createDefine } from "fresh";
 import { User } from "~/utils/server/user.ts";
 import {
+	Classroom,
 	ClassroomMember,
 	ClassroomTest,
 	ClassroomWithHomeroomTeacher,
@@ -9,6 +10,8 @@ import {
 export interface State {
 	classroom?: ClassroomWithHomeroomTeacher & { currentMember: ClassroomMember };
 	classroomTest?: ClassroomTest & { author: User };
+	classrooms: Classroom[];
+	currentClassroomId?: string;
 	title?: string;
 	user: User | null;
 }
