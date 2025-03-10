@@ -7,8 +7,12 @@ interface Props {
 }
 
 export function ClassroomSwitcher({ currentClassroomId, classrooms }: Props) {
+	const [query, setQuery] = useState<string>("");
 	const currentClassroom = classrooms.find((classroom) =>
 		classroom.id === currentClassroomId
+	);
+	const filteredClassrooms = classrooms.filter((classroom) =>
+		classroom.name.toLowerCase().includes(query.toLowerCase())
 	);
 	const [open, setOpen] = useState<boolean>(false);
 
@@ -53,10 +57,36 @@ export function ClassroomSwitcher({ currentClassroomId, classrooms }: Props) {
 					class="flex flex-col justify-center p-3 rounded-xl bg-white absolute mt-2 w-full border border-gray-400 shadow-lg"
 					f-client-nav={false}
 				>
-					{classrooms.length >= 1
+					<div class="flex gap-2 mb-2">
+						<div class="flex items-center rounded-xl border border-gray-300 shadow-md relative overflow-hidden grow">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.75"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="absolute left-3 stroke-gray-400 lucide lucide-search"
+							>
+								<circle cx="11" cy="11" r="8" />
+								<path d="m21 21-4.3-4.3" />
+							</svg>
+							<input
+								class="outline-none pl-10 pr-1 h-8 placeholder:text-gray-400 grow"
+								placeholder="Search a classroom"
+								size={1}
+								onInput={(input) => setQuery(input.currentTarget.value)}
+								type="text"
+							/>
+						</div>
+					</div>
+					{filteredClassrooms.length >= 1
 						? (
 							<div class="flex flex-col gap-1 justify-center">
-								{classrooms.map((classroom) => (
+								{filteredClassrooms.map((classroom) => (
 									<a
 										class="flex hover:bg-slate-100 rounded-lg px-2 py-1"
 										href={`/beta/classrooms/${classroom.id}/tests`}
