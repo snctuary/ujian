@@ -3,6 +3,7 @@ import { retrieveClassroomMembers } from "~/utils/server/classrooms.ts";
 import { page } from "fresh";
 import { memberRole } from "~/utils/client/memberRole.ts";
 import { Partial } from "fresh/runtime";
+import { Invite } from "~/islands/beta/Invite.tsx";
 
 export const handler = define.handlers({
 	async GET(ctx) {
@@ -16,6 +17,7 @@ export const handler = define.handlers({
 });
 
 export default define.page<typeof handler>((ctx) => {
+	const classroomId = ctx.state.currentClassroomId!;
 	const { members } = ctx.data;
 
 	return (
@@ -24,8 +26,7 @@ export default define.page<typeof handler>((ctx) => {
 				<form
 					class="flex items-center rounded-xl border border-gray-300 shadow-md relative overflow-hidden"
 					method="GET"
-					f-partial={`/beta/partials/classrooms/${ctx.state
-						.currentClassroomId!}/members`}
+					f-partial={`/beta/partials/classrooms/${classroomId}/members`}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -49,6 +50,7 @@ export default define.page<typeof handler>((ctx) => {
 						type="text"
 					/>
 				</form>
+				<Invite classroomId={classroomId} />
 			</div>
 			<Partial name="members">
 				<table class="table-auto text-center">
