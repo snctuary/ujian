@@ -7,7 +7,7 @@ import {
 import { HttpError, page, RouteConfig } from "fresh";
 import { STATUS_CODE } from "@std/http/status";
 import { retrieveUser } from "~/utils/server/user.ts";
-import { RespondInvite } from "~/islands/RespondInvite.tsx";
+import { RespondInvite } from "~/islands/beta/RespondInvite.tsx";
 
 export const config: RouteConfig = {
 	skipInheritedLayouts: true,

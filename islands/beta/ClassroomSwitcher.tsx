@@ -1,5 +1,6 @@
 import { Classroom } from "~/utils/server/classrooms.ts";
 import { useState } from "preact/hooks";
+import { CreateClassroom } from "~/islands/beta/CreateClassroom.tsx";
 
 interface Props {
 	currentClassroomId?: string;
@@ -69,19 +70,20 @@ export function ClassroomSwitcher({ currentClassroomId, classrooms }: Props) {
 								stroke-width="2.75"
 								stroke-linecap="round"
 								stroke-linejoin="round"
-								class="absolute left-3 stroke-gray-400 lucide lucide-search"
+								class="absolute left-2 stroke-gray-400 lucide lucide-search"
 							>
 								<circle cx="11" cy="11" r="8" />
 								<path d="m21 21-4.3-4.3" />
 							</svg>
 							<input
-								class="outline-none pl-10 pr-1 h-8 placeholder:text-gray-400 grow"
+								class="outline-none pl-8 pr-1 h-6 text-sm placeholder:text-gray-400 grow"
 								placeholder="Search a classroom"
 								size={1}
 								onInput={(input) => setQuery(input.currentTarget.value)}
 								type="text"
 							/>
 						</div>
+						<CreateClassroom />
 					</div>
 					{filteredClassrooms.length >= 1
 						? (
