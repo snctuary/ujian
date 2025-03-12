@@ -22,11 +22,11 @@ export const handler = define.handlers({
 		if (!draft) {
 			throw new HttpError(STATUS_CODE.NotFound);
 		} else {
-			return page({ draft });
+			return page({ classroomId, draft });
 		}
 	},
 });
 
 export default define.page<typeof handler>(({ data }) => {
-	return <DraftEditor draft={data.draft} />;
+	return <DraftEditor classroomId={data.classroomId} draft={data.draft} />;
 });

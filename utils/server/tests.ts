@@ -28,6 +28,40 @@ export async function createDraft(
 	}
 }
 
+export async function editDraft(
+	classroomId: string,
+	authorId: string,
+	draftId: string,
+	data: Partial<Omit<TestDraft, "id">>,
+) {
+	const draft = await fetchDraft(classroomId, authorId, draftId);
+
+	if (!draft) {
+		throw new Error("Unknown Draft");
+	} else {
+		const updatedData: TestDraft = {
+			...draft,
+			...data,
+			id: draft.id,
+			authorId: authorId,
+		};
+
+		const commit = await kv.set([
+			"classrooms",
+			classroomId,
+			"drafts",
+			authorId,
+			draftId,
+		], updatedData);
+
+		if (commit.ok) {
+			return updatedData;
+		} else {
+			throw new Error("Failed to update data");
+		}
+	}
+}
+
 export async function fetchDraft(
 	classroomId: string,
 	authorId: string,
