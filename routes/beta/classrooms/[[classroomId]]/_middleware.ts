@@ -11,21 +11,21 @@ export const handler = define.middleware(async (ctx) => {
 		user.id,
 		true,
 	);
-	ctx.state.classrooms = classrooms;
-	ctx.state.currentClassroomId = ctx.params.classroomId;
-
-	if (
-		classroomId && !classrooms.find((classroom) => classroom.id === classroomId)
-	) {
-		return ctx.redirect("/beta/classrooms");
-	}
-
 	const currentClassroomMember = await retrieveClassroomMember(
 		classroomId,
 		user.id,
-		true,
 	);
-	ctx.state.currentClassroomMember = currentClassroomMember;
+
+	ctx.state.classrooms = classrooms;
+	ctx.state.currentClassroomId = ctx.params.classroomId;
+
+	if (classroomId) {
+		if (!currentClassroomMember) {
+			return ctx.redirect("/beta/classrooms");
+		} else {
+			ctx.state.currentClassroomMember = currentClassroomMember;
+		}
+	}
 
 	return await ctx.next();
 });
