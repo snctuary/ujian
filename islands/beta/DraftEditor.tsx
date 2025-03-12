@@ -90,24 +90,34 @@ export function DraftEditor({ classroomId, draft }: Props) {
 									<input
 										class="bg-transparent outline-none"
 										onInput={(input) => setDraftName(input.currentTarget.value)}
+										onKeyDown={(key) => {
+											if (key.code === "Enter") {
+												changeName();
+											}
+										}}
 										value={draftName}
 									/>
-									<button type="button" onClick={() => changeName()}>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="16"
-											height="16"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											class="lucide lucide-check stroke-gray-600"
+									{draftName !== currentDraftName && (
+										<button
+											type="button"
+											onClick={() => changeName()}
 										>
-											<path d="M20 6 9 17l-5-5" />
-										</svg>
-									</button>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="16"
+												height="16"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="2"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												class="lucide lucide-check stroke-gray-600"
+											>
+												<path d="M20 6 9 17l-5-5" />
+											</svg>
+										</button>
+									)}
 									<button
 										type="button"
 										onClick={() => {
