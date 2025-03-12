@@ -12,6 +12,7 @@ export interface State {
 	classroomTest?: ClassroomTest & { author: User };
 	classrooms: Classroom[];
 	currentClassroomId?: string;
+	currentClassroomMember?: ClassroomMember;
 	title?: string;
 	user: User | null;
 }
