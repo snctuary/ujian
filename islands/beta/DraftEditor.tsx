@@ -12,11 +12,39 @@ export function DraftEditor({ classroomId, draft }: Props) {
 	const [editNameMode, setEditNameMode] = useState<boolean>(false);
 	const [draftName, setDraftName] = useState<string>(draft.name);
 	const [currentDraftName, setCurrentDraftName] = useState<string>(draft.name);
-	const [questions, setQuestions] = useState<TestQuestion[]>([]);
+	const [questions, setQuestions] = useState<TestQuestion[]>(draft.questions);
 	const [defaultChoices, setDefaultChoices] = useState<number>(2);
+	const [justLoaded, setJustLoaded] = useState<boolean>(true);
+	const [synced, setSynced] = useState<boolean>(true);
 
 	const [csrf, setCsrf] = useState<string>();
 	useEffect(() => handleCsrf(setCsrf), []);
+
+	async function editDraft() {
+		if (csrf) {
+			const response = await makeRequest<TestDraft>(
+				`/beta/api/classrooms/${classroomId}/drafts/${draft.id}`,
+				{
+					method: "PATCH",
+					body: JSON.stringify({ questions }),
+					csrfToken: csrf,
+				},
+			);
+
+			if (response.ok) {
+				setSynced(true);
+			}
+		}
+	}
+
+	useEffect(() => {
+		if (!justLoaded) {
+			setSynced(false);
+		}
+		setJustLoaded(false);
+		const saveDraft = setTimeout(() => editDraft(), 3_000);
+		return () => clearTimeout(saveDraft);
+	}, [questions]);
 
 	async function changeName() {
 		if (csrf && (draftName !== currentDraftName)) {
@@ -146,6 +174,45 @@ export function DraftEditor({ classroomId, draft }: Props) {
 								</>
 							)}
 					</div>
+				</div>
+				<div class="flex gap-2 p-2">
+					{!synced
+						? (
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.75"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="lucide lucide-refresh-cw stroke-slate-500 animate-spin"
+							>
+								<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+								<path d="M21 3v5h-5" />
+								<path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+								<path d="M8 16H3v5" />
+							</svg>
+						)
+						: (
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.75"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="lucide lucide-cloudy stroke-slate-500"
+							>
+								<path d="M17.5 21H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+								<path d="M22 10a3 3 0 0 0-3-3h-2.207a5.502 5.502 0 0 0-10.702.5" />
+							</svg>
+						)}
 				</div>
 			</div>
 			<div class="flex flex-col grow overflow-y-auto gap-3 px-2 py-3 no-scrollbar relative">
