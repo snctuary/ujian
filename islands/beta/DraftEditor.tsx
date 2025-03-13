@@ -66,9 +66,9 @@ export function DraftEditor({ classroomId, draft }: Props) {
 	}
 
 	return (
-		<div class="flex flex-col size-full p-4 divide-y divide-gray-200 overflow-y-auto font-[Outfit]">
+		<div class="flex flex-col size-full p-4 divide-y divide-gray-200 overflow-y-auto font-[Outfit] select-none">
 			<div class="flex justify-between items-center pb-4">
-				<div class="flex items-center gap-2">
+				<div class="flex grow items-center gap-2">
 					<button
 						class="hover:bg-slate-100 rounded-xl p-2"
 						type="button"
@@ -91,10 +91,10 @@ export function DraftEditor({ classroomId, draft }: Props) {
 							<path d="m15 18-6-6 6-6" />
 						</svg>
 					</button>
-					<div class="flex items-center gap-2 hover:bg-slate-50 p-2 rounded-xl">
+					<div class="flex grow">
 						{!editNameMode
 							? (
-								<>
+								<div class="flex items-center gap-2 hover:bg-slate-50 rounded-xl p-2">
 									<p>{currentDraftName}</p>
 									<button type="button" onClick={() => setEditNameMode(true)}>
 										<svg
@@ -113,18 +113,19 @@ export function DraftEditor({ classroomId, draft }: Props) {
 											<path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" />
 										</svg>
 									</button>
-								</>
+								</div>
 							)
 							: (
-								<>
+								<div class="flex items-center grow gap-2 hover:bg-slate-50 rounded-xl p-2">
 									<input
-										class="bg-transparent outline-none"
+										class="bg-transparent outline-none grow"
 										onInput={(input) => setDraftName(input.currentTarget.value)}
 										onKeyDown={(key) => {
 											if (key.code === "Enter") {
 												changeName();
 											}
 										}}
+										size={1}
 										value={draftName}
 									/>
 									{draftName !== currentDraftName && (
@@ -171,7 +172,7 @@ export function DraftEditor({ classroomId, draft }: Props) {
 											<path d="m6 6 12 12" />
 										</svg>
 									</button>
-								</>
+								</div>
 							)}
 					</div>
 				</div>
@@ -218,7 +219,36 @@ export function DraftEditor({ classroomId, draft }: Props) {
 			<div class="flex flex-col grow overflow-y-auto gap-3 px-2 py-3 no-scrollbar relative">
 				{questions.map((question, questionIndex) => (
 					<div class="flex flex-col rounded-md border border-slate-400 px-4 py-3 gap-2 shadow-md">
-						<p class="font-semibold">Question {questionIndex + 1}</p>
+						<div class="flex justify-between items-center">
+							<p class="font-semibold">Question {questionIndex + 1}</p>
+							<button
+								class="p-2 rounded-lg"
+								type="button"
+								onClick={() =>
+									setQuestions(
+										questions.filter((_, index) => index !== questionIndex),
+									)}
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="18"
+									height="18"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-trash-2 stroke-red-500 group-disabled:stroke-gray-400"
+								>
+									<path d="M3 6h18" />
+									<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+									<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+									<line x1="10" x2="10" y1="11" y2="17" />
+									<line x1="14" x2="14" y1="11" y2="17" />
+								</svg>
+							</button>
+						</div>
 						<textarea
 							class="p-2 font-medium resize-none bg-slate-50 hover:bg-slate-100 rounded-lg outline-none mb-4 no-scrollbar"
 							onInput={(input) =>
