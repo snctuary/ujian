@@ -100,7 +100,7 @@ export interface TestDraft {
 
 export interface TestQuestion {
 	question: string;
-	choices: unknown[];
+	choices: TestQuestionChoice[];
 }
 interface TestQuestionChoice {
 	correctChoice: boolean;

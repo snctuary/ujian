@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { TestDraft } from "~/utils/server/tests.ts";
+import { TestDraft, TestQuestion } from "~/utils/server/tests.ts";
 import { handleCsrf } from "~/utils/client/csrf.ts";
 import { makeRequest } from "~/utils/client/makeRequest.ts";
 
@@ -12,6 +12,8 @@ export function DraftEditor({ classroomId, draft }: Props) {
 	const [editNameMode, setEditNameMode] = useState<boolean>(false);
 	const [draftName, setDraftName] = useState<string>(draft.name);
 	const [currentDraftName, setCurrentDraftName] = useState<string>(draft.name);
+	const [questions, setQuestions] = useState<TestQuestion[]>([]);
+	const [defaultChoices, setDefaultChoices] = useState<number>(2);
 
 	const [csrf, setCsrf] = useState<string>();
 	useEffect(() => handleCsrf(setCsrf), []);
@@ -36,8 +38,8 @@ export function DraftEditor({ classroomId, draft }: Props) {
 	}
 
 	return (
-		<div class="flex flex-col min-h-full p-4 font-[Outfit]">
-			<div class="flex justify-between items-center">
+		<div class="flex flex-col size-full p-4 divide-y divide-gray-200 overflow-y-auto font-[Outfit]">
+			<div class="flex justify-between items-center pb-4">
 				<div class="flex items-center gap-2">
 					<button
 						class="hover:bg-slate-100 rounded-xl p-2"
@@ -146,6 +148,182 @@ export function DraftEditor({ classroomId, draft }: Props) {
 					</div>
 				</div>
 			</div>
+			<div class="flex flex-col grow overflow-y-auto gap-3 px-2 py-3 no-scrollbar relative">
+				{questions.map((question, questionIndex) => (
+					<div class="flex flex-col rounded-md border border-slate-400 px-4 py-3 gap-2 shadow-md">
+						<p class="font-semibold">Question {questionIndex + 1}</p>
+						<textarea
+							class="p-2 font-medium resize-none bg-slate-50 hover:bg-slate-100 rounded-lg outline-none mb-4 no-scrollbar"
+							onInput={(input) =>
+								setQuestions(
+									questions.with(questionIndex, {
+										...question,
+										question: input.currentTarget.value,
+									}),
+								)}
+							value={question.question}
+						/>
+						{question.choices.map((choice, choiceIndex) => (
+							<div class="flex items-center gap-2">
+								<button
+									data-correct={choice.correctChoice}
+									class="flex justify-center items-center bg-gray-200 data-[correct=true]:bg-gray-950 size-6 rounded-full"
+									type="button"
+									onClick={() =>
+										setQuestions(
+											questions.with(questionIndex, {
+												...question,
+												choices: question.choices.map((c, index) => ({
+													...c,
+													correctChoice: index === choiceIndex,
+												})),
+											}),
+										)}
+								>
+									{choice.correctChoice && (
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="white"
+											stroke-width="3"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											class="lucide lucide-check"
+										>
+											<path d="M20 6 9 17l-5-5" />
+										</svg>
+									)}
+								</button>
+								<input
+									class="bg-slate-50 hover:bg-slate-100 p-2 grow rounded-lg outline-slate-200 outline-1"
+									size={1}
+									onInput={(input) =>
+										setQuestions(
+											questions.with(questionIndex, {
+												...question,
+												choices: question.choices.with(choiceIndex, {
+													...choice,
+													value: input.currentTarget.value,
+												}),
+											}),
+										)}
+									value={choice.value}
+								/>
+								<button
+									class="p-1 group"
+									disabled={question.choices.length <= 2 ||
+										choice.correctChoice}
+									type="button"
+									onClick={() => {
+										setQuestions(
+											questions.with(questionIndex, {
+												...question,
+												choices: question.choices.filter((_, index) =>
+													index !== choiceIndex
+												),
+											}),
+										);
+										setDefaultChoices(question.choices.length - 1);
+									}}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="18"
+										height="18"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="lucide lucide-trash-2 stroke-red-500 group-disabled:stroke-gray-400"
+									>
+										<path d="M3 6h18" />
+										<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+										<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+										<line x1="10" x2="10" y1="11" y2="17" />
+										<line x1="14" x2="14" y1="11" y2="17" />
+									</svg>
+								</button>
+							</div>
+						))}
+						<div>
+							<button
+								class="flex items-center gap-2 px-3 py-2 border-2 border-slate-400 border-dashed rounded-lg text-black"
+								type="button"
+								onClick={() => {
+									setQuestions(
+										questions.with(questionIndex, {
+											...question,
+											choices: [...question.choices, {
+												correctChoice: false,
+												value: "New Choice",
+											}],
+										}),
+									);
+									setDefaultChoices(question.choices.length + 1);
+								}}
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="20"
+									height="20"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.75"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-plus"
+								>
+									<path d="M5 12h14" />
+									<path d="M12 5v14" />
+								</svg>
+								<p class="font-medium">Add Choice</p>
+							</button>
+						</div>
+					</div>
+				))}
+			</div>
+			<button
+				class="flex gap-1 justify-center items-center p-3 bg-gray-950 rounded-xl text-white"
+				type="button"
+				onClick={() => {
+					const presetChoices = [{ correctChoice: true, value: "An answer" }];
+
+					while (presetChoices.length < defaultChoices) {
+						presetChoices.push({
+							correctChoice: false,
+							value: "Another answer",
+						});
+					}
+
+					setQuestions([...questions, {
+						question: "Ask a Question...",
+						choices: presetChoices,
+					}]);
+				}}
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.75"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-plus"
+				>
+					<path d="M5 12h14" />
+					<path d="M12 5v14" />
+				</svg>
+				<p>Add Question</p>
+			</button>
 		</div>
 	);
 }
