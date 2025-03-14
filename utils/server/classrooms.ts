@@ -61,7 +61,7 @@ export async function createClassroom(
 			await addClassroomMember(
 				newClass.id,
 				homeroomTeacher,
-				ClassroomMemberFlags.HomeroomTeacher,
+				ClassroomMemberFlags.HomeroomTeacher | ClassroomMemberFlags.Teacher,
 			);
 			return newClass;
 		} catch (_) {

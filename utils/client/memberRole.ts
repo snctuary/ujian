@@ -1,18 +1,12 @@
 import { ClassroomMemberFlags } from "~/utils/server/classrooms.ts";
+import { hasFlags } from "~/utils/server/flags.ts";
 
 export function memberRole(flags: ClassroomMemberFlags) {
-	switch (flags) {
-		case ClassroomMemberFlags.HomeroomTeacher: {
-			return "Homeroom Teacher";
-		}
-		case ClassroomMemberFlags.Teacher: {
-			return "Teacher";
-		}
-		case ClassroomMemberFlags.Student: {
-			return "Student";
-		}
-		default: {
-			return "Unknown";
-		}
+	if (hasFlags(flags, [ClassroomMemberFlags.HomeroomTeacher])) {
+		return "Homeroom";
+	} else if (hasFlags(flags, [ClassroomMemberFlags.Teacher])) {
+		return "Teacher";
+	} else if (hasFlags(flags, [ClassroomMemberFlags.Student])) {
+		return "Student";
 	}
 }

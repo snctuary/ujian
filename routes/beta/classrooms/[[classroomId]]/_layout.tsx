@@ -2,12 +2,15 @@ import { RouteConfig } from "fresh";
 import { define } from "~/utils/server/core.ts";
 import { ClassroomSwitcher } from "~/islands/beta/ClassroomSwitcher.tsx";
 import { Partial } from "fresh/runtime";
+import { hasFlags } from "~/utils/server/flags.ts";
+import { ClassroomMemberFlags } from "~/utils/server/classrooms.ts";
 
 export const config: RouteConfig = {
 	skipInheritedLayouts: true,
 };
 
 export default define.page((ctx) => {
+	const currentMember = ctx.state.currentClassroomMember!;
 	return (
 		<div
 			class="flex flex-col md:flex-row h-full font-[Outfit] select-none no-scrollbar"
@@ -21,8 +24,9 @@ export default define.page((ctx) => {
 				<div class="flex flex-col gap-1 font-medium grow">
 					{ctx.state.currentClassroomId && (
 						<>
+							<p class="pl-2 text-slate-500 text-sm mt-2">MAIN</p>
 							<a
-								class="flex items-center gap-2 text-black aria-[current]:text-white aria-[current]:bg-black fill-current rounded-lg p-2"
+								class="flex items-center gap-2 text-black aria-[current]:text-white aria-[current]:bg-black fill-current rounded-xl p-2"
 								href={`/beta/classrooms/${ctx.state.currentClassroomId}/tests`}
 							>
 								<svg
@@ -35,15 +39,15 @@ export default define.page((ctx) => {
 									stroke-width="2.75"
 									stroke-linecap="round"
 									stroke-linejoin="round"
-									class="lucide lucide-sticky-note"
+									class="lucide lucide-circle-dot"
 								>
-									<path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z" />
-									<path d="M15 3v4a2 2 0 0 0 2 2h4" />
+									<circle cx="12" cy="12" r="10" />
+									<circle cx="12" cy="12" r="1" />
 								</svg>
 								<p>Tests</p>
 							</a>
 							<a
-								class="flex items-center gap-2 text-black aria-[current]:text-white aria-[current]:bg-black fill-current rounded-lg p-2"
+								class="flex items-center gap-2 text-black aria-[current]:text-white aria-[current]:bg-black fill-current rounded-xl p-2"
 								href={`/beta/classrooms/${ctx.state.currentClassroomId}/members`}
 							>
 								<svg
@@ -56,15 +60,45 @@ export default define.page((ctx) => {
 									stroke-width="2.75"
 									stroke-linecap="round"
 									stroke-linejoin="round"
-									class="lucide lucide-users"
+									class="lucide lucide-users-round"
 								>
-									<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-									<circle cx="9" cy="7" r="4" />
-									<path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-									<path d="M16 3.13a4 4 0 0 1 0 7.75" />
+									<path d="M18 21a8 8 0 0 0-16 0" />
+									<circle cx="10" cy="8" r="5" />
+									<path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
 								</svg>
 								<p>Members</p>
 							</a>
+							{hasFlags(currentMember.flags, [ClassroomMemberFlags.Teacher]) &&
+								(
+									<a
+										class="flex items-center gap-2 text-black aria-[current]:text-white aria-[current]:bg-black fill-current rounded-xl p-2"
+										href={`/beta/classrooms/${ctx.state.currentClassroomId}/drafts`}
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="20"
+											height="20"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2.75"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											class="lucide lucide-circle-dot-dashed"
+										>
+											<path d="M10.1 2.18a9.93 9.93 0 0 1 3.8 0" />
+											<path d="M17.6 3.71a9.95 9.95 0 0 1 2.69 2.7" />
+											<path d="M21.82 10.1a9.93 9.93 0 0 1 0 3.8" />
+											<path d="M20.29 17.6a9.95 9.95 0 0 1-2.7 2.69" />
+											<path d="M13.9 21.82a9.94 9.94 0 0 1-3.8 0" />
+											<path d="M6.4 20.29a9.95 9.95 0 0 1-2.69-2.7" />
+											<path d="M2.18 13.9a9.93 9.93 0 0 1 0-3.8" />
+											<path d="M3.71 6.4a9.95 9.95 0 0 1 2.7-2.69" />
+											<circle cx="12" cy="12" r="1" />
+										</svg>
+										<p>Drafts</p>
+									</a>
+								)}
 						</>
 					)}
 				</div>

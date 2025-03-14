@@ -41,7 +41,7 @@ export default define.page<typeof handler>(({ data }) => {
 								</div>
 							</td>
 							<td class="border-b border-gray-300 h-14">
-								{memberRole(member.flags)}
+								{memberRole(member.flags) ?? "Unknown"}
 							</td>
 						</tr>
 					))}
