@@ -52,7 +52,7 @@ export default define.page<typeof handler>((ctx) => {
 				{drafts.map((draft) => (
 					<div class="flex justify-between items-center p-3 border border-gray-300 rounded-xl shadow-md">
 						<div class="flex flex-col gap-1 grow">
-							<p>{draft.name}</p>
+							<p class="text-lg">{draft.name}</p>
 							<div class="flex items-center gap-2 font-medium text-xs">
 								<p>
 									{draft.questions.length} Questions
@@ -61,7 +61,10 @@ export default define.page<typeof handler>((ctx) => {
 								<p>Last edited {timeAgo(new Date(draft.lastEditedAt))}</p>
 							</div>
 						</div>
-						<div>
+						<a
+							href={`/beta/classrooms/${classroomId}/drafts/${draft.id}`}
+							f-client-nav={false}
+						>
 							<button
 								class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full font-semibold"
 								type="button"
@@ -84,7 +87,7 @@ export default define.page<typeof handler>((ctx) => {
 								</svg>
 								<p>Edit</p>
 							</button>
-						</div>
+						</a>
 					</div>
 				))}
 			</div>
