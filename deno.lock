@@ -2,6 +2,7 @@
   "version": "4",
   "specifiers": {
     "jsr:@bronti/bcrypt@^1.0.3": "1.0.3",
+    "jsr:@egamagz/time-ago@^2025.2.26": "2025.2.26",
     "jsr:@fresh/core@^2.0.0-alpha.1": "2.0.0-alpha.29",
     "jsr:@fresh/core@^2.0.0-alpha.29": "2.0.0-alpha.29",
     "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7": "0.0.1-alpha.7",
@@ -55,6 +56,9 @@
   "jsr": {
     "@bronti/bcrypt@1.0.3": {
       "integrity": "2768fdc727b957d1c039d0da5942aae1c0397d3d364af98dee15df0264554602"
+    },
+    "@egamagz/time-ago@2025.2.26": {
+      "integrity": "f17b7523199f600537f4b1fdf30eed75a0ddda42a5c228604bbf2b7d1974057b"
     },
     "@fresh/core@2.0.0-alpha.29": {
       "integrity": "5374a478c2d407da2a84a9802e00da2305de2945b0934e6a7b24a989a7b82e0f",
@@ -1352,6 +1356,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@bronti/bcrypt@^1.0.3",
+      "jsr:@egamagz/time-ago@^2025.2.26",
       "jsr:@fresh/core@^2.0.0-alpha.29",
       "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7",
       "jsr:@gz/jwt@0.1",

@@ -11,6 +11,7 @@ export async function createDraft(
 		id: snowflake(),
 		name,
 		authorId,
+		lastEditedAt: new Date().toISOString(),
 		questions,
 	};
 
@@ -44,6 +45,7 @@ export async function editDraft(
 			...data,
 			id: draft.id,
 			authorId: authorId,
+			lastEditedAt: new Date().toISOString(),
 		};
 
 		const commit = await kv.set([
@@ -88,13 +90,14 @@ export async function fetchDrafts(
 	}, { cursor, limit });
 	const data = await Array.fromAsync(fetchedDrafts);
 
-	return { cursor: fetchedDrafts.cursor, data };
+	return { cursor: fetchedDrafts.cursor, data: data.map((ctx) => ctx.value) };
 }
 
 export interface TestDraft {
 	id: string;
 	name: string;
 	authorId: string;
+	lastEditedAt: string;
 	questions: TestQuestion[];
 }
 

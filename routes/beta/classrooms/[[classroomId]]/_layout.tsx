@@ -10,7 +10,7 @@ export const config: RouteConfig = {
 export default define.page((ctx) => {
 	return (
 		<div
-			class="flex flex-col md:flex-row min-h-full font-[Outfit]"
+			class="flex flex-col md:flex-row h-full font-[Outfit] no-scrollbar"
 			f-client-nav
 		>
 			<div class="hidden md:flex flex-col gap-3 p-3 bg-slate-50">
