@@ -21,7 +21,7 @@ export default define.page<typeof handler>((ctx) => {
 	const { members } = ctx.data;
 
 	return (
-		<div class="flex flex-col grow relative gap-2 border border-gray-300 rounded-xl divide-y divide-gray-300">
+		<div class="flex flex-col size-full relative gap-2 border border-gray-300 rounded-xl divide-y divide-gray-300">
 			<div class="flex justify-between gap-2 p-3">
 				<form
 					class="flex items-center rounded-xl border border-gray-300 shadow-md relative overflow-hidden"
@@ -52,31 +52,33 @@ export default define.page<typeof handler>((ctx) => {
 				</form>
 				<Invite classroomId={classroomId} />
 			</div>
-			<Partial name="members">
-				<table class="table-auto text-center">
-					<thead class="bg-gray-100 text-slate-500 border-y border-collapse border-gray-300 h-12">
-						<tr>
-							<th>Name</th>
-							<th>Role</th>
-						</tr>
-					</thead>
-					<tbody>
-						{members.map((member) => (
-							<tr class="hover:bg-gray-50">
-								<td class="border-b border-gray-300 h-14">
-									<div class="flex justify-center items-center gap-2">
-										<div class="size-8 bg-gray-100 rounded-full"></div>
-										{member.user.username}
-									</div>
-								</td>
-								<td class="border-b border-gray-300 h-14">
-									{memberRole(member.flags)}
-								</td>
+			<div class="grow overflow-y-auto no-scrollbar">
+				<Partial name="members">
+					<table class="table-auto text-center w-full">
+						<thead class="bg-gray-100 text-slate-500 border-y border-collapse border-gray-300 h-12">
+							<tr>
+								<th>Name</th>
+								<th>Role</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
-			</Partial>
+						</thead>
+						<tbody>
+							{members.map((member) => (
+								<tr class="hover:bg-gray-50">
+									<td class="border-b border-gray-300 h-14">
+										<div class="flex justify-center items-center gap-2">
+											<div class="size-8 bg-gray-100 rounded-full"></div>
+											{member.user.username}
+										</div>
+									</td>
+									<td class="border-b border-gray-300 h-14">
+										{memberRole(member.flags)}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</Partial>
+			</div>
 		</div>
 	);
 });

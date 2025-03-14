@@ -24,7 +24,7 @@ export default define.page<typeof handler>(({ data }) => {
 
 	return (
 		<Partial name="members">
-			<table class="table-auto text-center">
+			<table class="table-auto text-center w-full">
 				<thead class="bg-gray-100 text-slate-500 border-y border-collapse border-gray-300 h-12">
 					<tr>
 						<th>Name</th>
