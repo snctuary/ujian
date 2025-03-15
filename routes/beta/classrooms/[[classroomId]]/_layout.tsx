@@ -11,6 +11,7 @@ export const config: RouteConfig = {
 
 export default define.page((ctx) => {
 	const currentMember = ctx.state.currentClassroomMember!;
+
 	return (
 		<div
 			class="flex flex-col md:flex-row h-full font-[Outfit] select-none no-scrollbar"
@@ -107,6 +108,12 @@ export default define.page((ctx) => {
 				<Partial name="content">
 					<ctx.Component />
 				</Partial>
+			</div>
+			<div class="flex mt-3 justify-between md:hidden px-3 order-first relative">
+				<ClassroomSwitcher
+					currentClassroomId={ctx.state.currentClassroomId}
+					classrooms={ctx.state.classrooms}
+				/>
 			</div>
 		</div>
 	);

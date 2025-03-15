@@ -57,7 +57,7 @@ export function CreateClassroom() {
 				</svg>
 			</button>
 			{open && (
-				<div class="flex flex-col bg-white rounded-xl px-5 py-4 gap-1 w-60 absolute top-0 -right-1.5 shadow-sm border border-gray-200">
+				<div class="flex flex-col bg-white rounded-xl px-5 py-4 gap-1 w-60 absolute top-0 right-0 md:-right-1.5 left-[-180px] md:left-0 shadow-sm border border-gray-200">
 					<div class="flex justify-between items-center">
 						<p class="font-semibold">Create Classroom</p>
 						<button
