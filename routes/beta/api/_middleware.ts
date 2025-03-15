@@ -4,10 +4,11 @@ import { define } from "~/utils/server/core.ts";
 import { decode } from "@gz/jwt";
 import { Token } from "~/utils/server/session.ts";
 import { env } from "~/utils/server/env.ts";
+import { retrieveCsrf } from "~/utils/server/csrf.ts";
 
 export const handler = define.middleware(async (ctx) => {
 	if (ctx.url.pathname !== "/api/csrf") {
-		const csrf = ctx.req.headers.get("x-csrf-token");
+		const csrf = await retrieveCsrf(ctx.req);
 		const unauthorized = new HttpError(STATUS_CODE.Unauthorized);
 
 		if (!csrf) {
