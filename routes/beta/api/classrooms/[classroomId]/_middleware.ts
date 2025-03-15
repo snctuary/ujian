@@ -12,6 +12,7 @@ export const handler = define.middleware(async (ctx) => {
 	if (!member) {
 		throw new HttpError(STATUS_CODE.NotFound, "Unknown Classroom");
 	} else {
+		ctx.state.currentClassroomId = classroomId;
 		ctx.state.currentClassroomMember = member;
 		return await ctx.next();
 	}

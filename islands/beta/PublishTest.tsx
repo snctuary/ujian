@@ -2,10 +2,11 @@ import { useState } from "preact/hooks";
 
 interface Props {
 	classroomId: string;
+	draftId: string;
 	csrf?: string;
 }
 
-export function PublishTest({ classroomId, csrf }: Props) {
+export function PublishTest({ classroomId, draftId, csrf }: Props) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [name, setName] = useState<string>();
 
@@ -21,18 +22,20 @@ export function PublishTest({ classroomId, csrf }: Props) {
 			</button>
 			{open && (
 				<form
-					action={`/api/classrooms/${classroomId}/tests`}
+					action={`/beta/api/classrooms/${classroomId}/tests`}
+					method="POST"
 					class="flex flex-col gap-2 w-72 md:w-96 p-3 rounded-xl bg-white border border-gray-200 absolute mt-2 right-0 shadow-md"
 				>
 					<input class="hidden" name="_csrf" value={csrf} />
-					<div class="flex justify-between items-start gap-2 mt-1">
+					<input class="hidden" name="templateId" value={draftId} />
+					<div class="flex justify-between items-start gap-2">
 						<div class="flex flex-col">
 							<p class="font-semibold">Publish Test</p>
 							<p class="text-slate-500 text-sm">
 								Share this test to your students
 							</p>
 						</div>
-						<button type="button" onClick={() => setOpen(false)}>
+						<button type="reset" onClick={() => setOpen(false)}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
@@ -95,7 +98,7 @@ export function PublishTest({ classroomId, csrf }: Props) {
 					</div>
 					<button
 						class="flex justify-center py-2 bg-black rounded-lg disabled:opacity-50"
-						type="button"
+						type="submit"
 						disabled={!name}
 					>
 						<p class="text-white font-medium">Publish</p>

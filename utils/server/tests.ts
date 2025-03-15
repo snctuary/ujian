@@ -29,6 +29,45 @@ export async function createDraft(
 	}
 }
 
+interface CreateTestOptions extends Pick<Test, "name"> {
+	duration: number;
+	templateId: string;
+}
+export async function createTest(
+	classroomId: string,
+	authorId: string,
+	{ name, duration, templateId }: CreateTestOptions,
+) {
+	const template = await fetchDraft(classroomId, authorId, templateId);
+
+	if (!template) {
+		throw new Error("Unknown Template");
+	} else {
+		const newTest: Test = {
+			id: snowflake(),
+			name,
+			endsAt: new Date(Math.floor(Date.now()) + (duration * 60 * 1_000))
+				.toISOString(),
+			authorId,
+			questions: template.questions,
+		};
+
+		const commit = await kv.set([
+			"classrooms",
+			classroomId,
+			"tests",
+			"byId",
+			newTest.id,
+		], newTest);
+
+		if (commit.ok) {
+			return newTest;
+		} else {
+			throw new Error("Failed to create test");
+		}
+	}
+}
+
 export async function editDraft(
 	classroomId: string,
 	authorId: string,
@@ -98,6 +137,14 @@ export interface TestDraft {
 	name: string;
 	authorId: string;
 	lastEditedAt: string;
+	questions: TestQuestion[];
+}
+
+export interface Test {
+	id: string;
+	name: string;
+	authorId: string;
+	endsAt: string;
 	questions: TestQuestion[];
 }
 

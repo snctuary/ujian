@@ -215,7 +215,11 @@ export function DraftEditor({ classroomId, draft }: Props) {
 								<path d="M22 10a3 3 0 0 0-3-3h-2.207a5.502 5.502 0 0 0-10.702.5" />
 							</svg>
 						)}
-					<PublishTest classroomId={classroomId} csrf={csrf} />
+					<PublishTest
+						classroomId={classroomId}
+						draftId={draft.id}
+						csrf={csrf}
+					/>
 				</div>
 			</div>
 			<div class="flex flex-col grow overflow-y-auto gap-3 px-2 py-3 no-scrollbar">
