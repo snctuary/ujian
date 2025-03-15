@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import { TestDraft, TestQuestion } from "~/utils/server/tests.ts";
 import { handleCsrf } from "~/utils/client/csrf.ts";
 import { makeRequest } from "~/utils/client/makeRequest.ts";
+import { PublishTest } from "~/islands/beta/PublishTest.tsx";
 
 interface Props {
 	classroomId: string;
@@ -67,7 +68,7 @@ export function DraftEditor({ classroomId, draft }: Props) {
 
 	return (
 		<div class="flex flex-col size-full p-4 divide-y divide-gray-200 overflow-y-auto font-[Outfit] select-none">
-			<div class="flex justify-between items-center pb-4">
+			<div class="flex items-center gap-2 pb-4 relative">
 				<div class="flex grow items-center gap-2">
 					<button
 						class="hover:bg-slate-100 rounded-xl p-2"
@@ -176,7 +177,7 @@ export function DraftEditor({ classroomId, draft }: Props) {
 							)}
 					</div>
 				</div>
-				<div class="flex gap-2 p-2">
+				<div class="flex items-center gap-2 relative">
 					{!synced
 						? (
 							<svg
@@ -214,9 +215,10 @@ export function DraftEditor({ classroomId, draft }: Props) {
 								<path d="M22 10a3 3 0 0 0-3-3h-2.207a5.502 5.502 0 0 0-10.702.5" />
 							</svg>
 						)}
+					<PublishTest classroomId={classroomId} csrf={csrf} />
 				</div>
 			</div>
-			<div class="flex flex-col grow overflow-y-auto gap-3 px-2 py-3 no-scrollbar relative">
+			<div class="flex flex-col grow overflow-y-auto gap-3 px-2 py-3 no-scrollbar">
 				{questions.map((question, questionIndex) => (
 					<div class="flex flex-col rounded-md border border-slate-400 px-4 py-3 gap-2 shadow-md">
 						<div class="flex justify-between items-center">
