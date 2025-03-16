@@ -129,7 +129,9 @@ export async function fetchStatus(
 
 export async function fetchTests(classroomId: string) {
 	const tests = await Array.fromAsync(
-		kv.list<Test>({ prefix: ["classrooms", classroomId, "tests"] }),
+		kv.list<Test>({ prefix: ["classrooms", classroomId, "tests"] }, {
+			reverse: true,
+		}),
 	);
 	return tests.map((test) => test.value);
 }
