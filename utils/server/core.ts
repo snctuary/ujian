@@ -6,6 +6,7 @@ import {
 	ClassroomTest,
 	ClassroomWithHomeroomTeacher,
 } from "~/utils/server/classrooms.ts";
+import { Test } from "~/utils/server/tests.ts";
 
 export interface State {
 	classroom?: ClassroomWithHomeroomTeacher & { currentMember: ClassroomMember };
@@ -13,6 +14,7 @@ export interface State {
 	classrooms: Classroom[];
 	currentClassroomId?: string;
 	currentClassroomMember?: ClassroomMember;
+	currentTest?: Test;
 	title?: string;
 	user: User | null;
 }

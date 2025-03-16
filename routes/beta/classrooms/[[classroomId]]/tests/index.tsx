@@ -100,8 +100,16 @@ export default define.page<typeof handler>(({ data }) => {
 								</div>
 							</div>
 						</div>
-						<div class="flex justify-between mt-2">
+						<div class="flex items-center justify-between mt-2">
 							<TestStatus status={test.status} statusText={test.statusText} />
+							<a href={`/beta/classrooms/${classroomId}/tests/${test.id}`}>
+								<div
+									data-status={test.status}
+									class="hidden data-[status=1]:flex px-3 py-2 bg-black rounded-lg"
+								>
+									<p class="text-white text-sm font-mediumm">Start Exam</p>
+								</div>
+							</a>
 						</div>
 					</div>
 				))}
