@@ -20,7 +20,7 @@ export function ClassroomSwitcher({ currentClassroomId, classrooms }: Props) {
 	return (
 		<div class="relative">
 			<button
-				class="flex justify-between items-center w-56 md:w-64 bg-white px-3 py-2 gap-2 rounded-xl shadow-md md:shadow-none border md:border-none border-gray-200"
+				class="flex justify-between items-center w-56 md:w-64 bg-white p-3 gap-2 rounded-xl shadow-md md:shadow-none border md:border-none border-gray-200"
 				onClick={() => setOpen(!open)}
 				type="button"
 			>
