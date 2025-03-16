@@ -14,15 +14,20 @@ export default define.page((ctx) => {
 
 	return (
 		<div
-			class="flex flex-col md:flex-row h-full font-[Outfit] select-none no-scrollbar"
+			class="flex flex-col md:flex-row h-full font-[Outfit] select-none overflow-y-auto no-scrollbar"
 			f-client-nav
 		>
-			<div class="hidden md:flex flex-col gap-3 p-3 bg-slate-50">
+			<div class="flex flex-col grow p-4 overflow-y-auto">
+				<Partial name="content">
+					<ctx.Component />
+				</Partial>
+			</div>
+			<div class="flex md:flex-col order-first gap-3 p-3 md:bg-slate-50">
 				<ClassroomSwitcher
 					currentClassroomId={ctx.state.currentClassroomId}
 					classrooms={ctx.state.classrooms}
 				/>
-				<div class="flex flex-col gap-1 font-medium grow">
+				<div class="hidden md:flex flex-col gap-1 font-medium grow">
 					{ctx.state.currentClassroomId && (
 						<>
 							<p class="pl-2 text-slate-500 text-sm mt-2">MAIN</p>
@@ -103,17 +108,6 @@ export default define.page((ctx) => {
 						</>
 					)}
 				</div>
-			</div>
-			<div class="flex flex-col grow p-4">
-				<Partial name="content">
-					<ctx.Component />
-				</Partial>
-			</div>
-			<div class="flex mt-3 justify-between md:hidden px-3 order-first relative">
-				<ClassroomSwitcher
-					currentClassroomId={ctx.state.currentClassroomId}
-					classrooms={ctx.state.classrooms}
-				/>
 			</div>
 		</div>
 	);
