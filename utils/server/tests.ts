@@ -103,6 +103,37 @@ export async function editDraft(
 	}
 }
 
+export async function fetchStatus(
+	classroomId: string,
+	test: Test,
+	studentId: string,
+) {
+	const completed = !(await kv.atomic().check({
+		key: [
+			"classrooms",
+			classroomId,
+			"tests",
+			test.id,
+			"responses",
+			studentId,
+		],
+		versionstamp: null,
+	}).commit());
+
+	if (Date.parse(test.endsAt) > Date.now()) {
+		return completed ? TestStatusCode.Completed : TestStatusCode.Ongoing;
+	} else {
+		return TestStatusCode.Ended;
+	}
+}
+
+export async function fetchTests(classroomId: string) {
+	const tests = await Array.fromAsync(
+		kv.list<Test>({ prefix: ["classrooms", classroomId, "tests"] }),
+	);
+	return tests.map((test) => test.value);
+}
+
 export async function fetchDraft(
 	classroomId: string,
 	authorId: string,
@@ -146,6 +177,13 @@ export interface Test {
 	authorId: string;
 	endsAt: string;
 	questions: TestQuestion[];
+}
+
+export enum TestStatusCode {
+	Upcoming,
+	Ongoing,
+	Ended,
+	Completed,
 }
 
 export interface TestQuestion {
