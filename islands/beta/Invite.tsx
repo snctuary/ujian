@@ -77,7 +77,7 @@ export function Invite({ classroomId }: Props) {
 					</button>
 				)
 				: (
-					<div class="flex flex-col bg-white rounded-xl px-5 py-4 gap-2 w-96 absolute top-0 right-0 shadow-sm border border-gray-100">
+					<div class="flex flex-col bg-white rounded-xl px-5 py-4 gap-2 w-64 md:w-96 absolute top-0 right-0 shadow-sm border border-gray-100">
 						<div class="flex justify-between items-center">
 							<p class="font-semibold text-lg">Invite Members</p>
 							<button

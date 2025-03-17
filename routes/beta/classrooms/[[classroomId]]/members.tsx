@@ -21,7 +21,7 @@ export default define.page<typeof handler>((ctx) => {
 	const { members } = ctx.data;
 
 	return (
-		<div class="flex flex-col size-full relative gap-2 border border-gray-300 rounded-xl divide-y divide-gray-300">
+		<div class="flex flex-col grow relative gap-2 border border-gray-300 rounded-xl divide-y divide-gray-300">
 			<div class="flex justify-between gap-2 p-3">
 				<form
 					class="flex items-center rounded-xl border border-gray-300 shadow-md relative overflow-hidden"
