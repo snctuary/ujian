@@ -96,7 +96,7 @@ export default define.page<typeof handler>(({ data }) => {
 										<path d="M3.721 6.391a10 10 0 0 1 2.7-2.69" />
 										<path d="M6.391 20.279a10 10 0 0 1-2.69-2.7" />
 									</svg>
-									<p class="text-xs">{test.questions.length} Questions</p>
+									<p class="text-xs">{test.totalQuestions} Questions</p>
 								</div>
 							</div>
 						</div>

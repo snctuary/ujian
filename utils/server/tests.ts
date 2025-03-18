@@ -49,16 +49,15 @@ export async function createTest(
 			endsAt: new Date(Math.floor(Date.now()) + (duration * 60 * 1_000))
 				.toISOString(),
 			authorId,
-			questions: template.questions,
+			totalQuestions: template.questions.length,
 		};
 
-		const commit = await kv.set([
-			"classrooms",
-			classroomId,
-			"tests",
-			"byId",
-			newTest.id,
-		], newTest);
+		const testKey = ["classrooms", classroomId, "tests", "byId", newTest.id];
+
+		const commit = await kv.atomic().set([...testKey, "info"], newTest).set([
+			...testKey,
+			"data",
+		], template.questions).commit();
 
 		if (commit.ok) {
 			return newTest;
@@ -134,8 +133,21 @@ export async function fetchTest(classroomId: string, testId: string) {
 		"tests",
 		"byId",
 		testId,
+		"info",
 	]);
 	return test.value;
+}
+
+export async function fetchTestQuestions(classroomId: string, testId: string) {
+	const questions = await kv.get<TestQuestion[]>([
+		"classrooms",
+		classroomId,
+		"tests",
+		"byId",
+		testId,
+		"data",
+	]);
+	return questions.value;
 }
 
 export async function fetchTests(classroomId: string) {
@@ -144,7 +156,9 @@ export async function fetchTests(classroomId: string) {
 			reverse: true,
 		}),
 	);
-	return tests.map((test) => test.value);
+	return tests.filter((ctx) => ctx.key.at(-1) === "info").map((test) =>
+		test.value
+	);
 }
 
 export async function fetchDraft(
@@ -189,7 +203,7 @@ export interface Test {
 	name: string;
 	authorId: string;
 	endsAt: string;
-	questions: TestQuestion[];
+	totalQuestions: number;
 }
 
 export enum TestStatusCode {
