@@ -1,8 +1,8 @@
-import { Test, TestQuestion } from "~/utils/server/tests.ts";
+import { PartialTestQuestion, Test } from "~/utils/server/tests.ts";
 import { useState } from "preact/hooks";
 
 interface Props {
-	data: Test & { questions: TestQuestion[] };
+	data: Test & { questions: PartialTestQuestion[] };
 }
 
 export function TestView({ data }: Props) {
@@ -46,7 +46,7 @@ export function TestView({ data }: Props) {
 							data-selected={choices.at(currentQuestionId) === choiceIndex}
 							class="flex p-4 rounded-lg shadow-md data-[selected=true]:bg-black data-[selected=true]:text-white data-[selected=true]:border-none border border-gray-200"
 						>
-							<p class="text-lg font-medium">{choice.value}</p>
+							<p class="text-lg font-medium">{choice}</p>
 						</div>
 					</button>
 				))}

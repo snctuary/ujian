@@ -226,9 +226,9 @@ export async function randomizeOrder(
 			return {
 				question: question.question,
 				choices: partialQuestion.choices.map((choiceId) =>
-					question.choices.at(choiceId)!
+					question.choices.at(choiceId)!.value
 				),
-			} satisfies TestQuestion;
+			};
 		});
 	} else {
 		if (!questions) {
@@ -257,9 +257,9 @@ export async function randomizeOrder(
 					return {
 						question: question.question,
 						choices: partialQuestion.choices.map((choiceId) =>
-							question.choices.at(choiceId)!
+							question.choices.at(choiceId)!.value
 						),
-					} satisfies TestQuestion;
+					};
 				});
 			} else {
 				throw new Error("Failed to randomize questions");
@@ -282,6 +282,10 @@ export interface Test {
 	authorId: string;
 	endsAt: string;
 	totalQuestions: number;
+}
+
+export interface PartialTestQuestion extends Omit<TestQuestion, "choices"> {
+	choices: string[];
 }
 
 export interface TestRandomizedQuestion {
