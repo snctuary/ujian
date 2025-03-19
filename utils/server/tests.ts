@@ -1,5 +1,6 @@
 import { snowflake } from "~/utils/server/snowflake.ts";
 import { kv } from "~/utils/server/core.ts";
+import { shuffle } from "@std/random/shuffle";
 
 export async function createDraft(
 	classroomId: string,
@@ -190,6 +191,83 @@ export async function fetchDrafts(
 	return { cursor: fetchedDrafts.cursor, data: data.map((ctx) => ctx.value) };
 }
 
+export async function fetchRandomizedOrder(
+	classroomId: string,
+	testId: string,
+	studentId: string,
+) {
+	const data = await kv.get<TestRandomizedQuestion[]>([
+		"classrooms",
+		classroomId,
+		"tests",
+		testId,
+		"randomized",
+		studentId,
+	]);
+	return data.value;
+}
+
+export async function randomizeOrder(
+	classroomId: string,
+	testId: string,
+	studentId: string,
+) {
+	const existedData = await fetchRandomizedOrder(
+		classroomId,
+		testId,
+		studentId,
+	);
+	const questions = await fetchTestQuestions(classroomId, testId);
+
+	if (existedData) {
+		return existedData.map((partialQuestion) => {
+			const question = questions!.at(partialQuestion.questionId)!;
+
+			return {
+				question: question.question,
+				choices: partialQuestion.choices.map((choiceId) =>
+					question.choices.at(choiceId)!
+				),
+			} satisfies TestQuestion;
+		});
+	} else {
+		if (!questions) {
+			throw new Error("Can't find questions data for this test");
+		} else {
+			const data: TestRandomizedQuestion[] = shuffle(
+				questions.map((question, questionId) => ({
+					questionId,
+					choices: shuffle(question.choices.map((_, choiceId) => choiceId)),
+				})),
+			);
+
+			const commit = await kv.set([
+				"classrooms",
+				classroomId,
+				"tests",
+				testId,
+				"randomized",
+				studentId,
+			], data);
+
+			if (commit.ok) {
+				return data.map((partialQuestion) => {
+					const question = questions!.at(partialQuestion.questionId)!;
+
+					return {
+						question: question.question,
+						choices: partialQuestion.choices.map((choiceId) =>
+							question.choices.at(choiceId)!
+						),
+					} satisfies TestQuestion;
+				});
+			} else {
+				throw new Error("Failed to randomize questions");
+			}
+		}
+	}
+}
+
 export interface TestDraft {
 	id: string;
 	name: string;
@@ -204,6 +282,11 @@ export interface Test {
 	authorId: string;
 	endsAt: string;
 	totalQuestions: number;
+}
+
+export interface TestRandomizedQuestion {
+	questionId: number;
+	choices: number[];
 }
 
 export enum TestStatusCode {
