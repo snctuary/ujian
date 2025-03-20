@@ -18,14 +18,14 @@ export const handler = define.handlers({
 		) {
 			throw new HttpError(STATUS_CODE.BadRequest);
 		} else {
-			const newTest = await createTest(
+			await createTest(
 				classroomId,
 				ctx.state.currentClassroomMember!.userId,
 				{ name, duration, templateId },
 			);
 
 			return ctx.redirect(
-				`/beta/classrooms/${classroomId}/tests/${newTest.id}`,
+				`/beta/classrooms/${classroomId}/tests`,
 			);
 		}
 	},

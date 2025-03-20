@@ -2,17 +2,16 @@ import { define } from "~/utils/server/core.ts";
 import { createDraft } from "~/utils/server/tests.ts";
 
 export const handler = define.handlers({
-	async GET(ctx) {
+	async POST(ctx) {
 		const classroomId = ctx.state.currentClassroomId!;
+		const member = ctx.state.currentClassroomMember!;
+
 		const newDraft = await createDraft(
 			classroomId,
-			ctx.state.currentClassroomMember!.userId,
+			member.userId,
 			"New Test",
 			[],
 		);
-
-		return await ctx.redirect(
-			`/beta/classrooms/${classroomId}/drafts/${newDraft.id}`,
-		);
+		return Response.json(newDraft);
 	},
 });

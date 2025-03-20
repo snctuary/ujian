@@ -2,6 +2,7 @@ import { page } from "fresh";
 import { define } from "~/utils/server/core.ts";
 import { fetchDrafts } from "~/utils/server/tests.ts";
 import { timeAgo } from "@egamagz/time-ago";
+import { NewDraft } from "~/islands/beta/NewDraft.tsx";
 
 export const handler = define.handlers({
 	async GET(ctx) {
@@ -21,7 +22,7 @@ export default define.page<typeof handler>((ctx) => {
 		<div class="flex flex-col size-full relative gap-2 border border-gray-300 rounded-xl divide-y divide-gray-300">
 			<div class="flex justify-between gap-2 p-3">
 				<form
-					class="flex items-center rounded-xl border border-gray-300 shadow-md relative overflow-hidden"
+					class="flex items-center grow rounded-xl border border-gray-300 shadow-md relative overflow-hidden"
 					method="GET"
 					f-partial={`/beta/partials/classrooms/${classroomId}/drafts`}
 				>
@@ -41,12 +42,14 @@ export default define.page<typeof handler>((ctx) => {
 						<path d="m21 21-4.3-4.3" />
 					</svg>
 					<input
-						class="outline-none pl-10 pr-3 h-10 placeholder:text-gray-400"
+						class="grow outline-none pl-10 pr-3 h-10 placeholder:text-gray-400"
 						name="q"
+						size={1}
 						placeholder="Search drafts"
 						type="text"
 					/>
 				</form>
+				<NewDraft classroomId={classroomId} />
 			</div>
 			<div class="flex flex-col gap-2 p-2 overflow-y-auto no-scrollbar">
 				{drafts.map((draft) => (
