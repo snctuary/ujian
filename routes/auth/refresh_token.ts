@@ -10,7 +10,7 @@ export const handler = define.handlers({
 		const cookies = getCookies(ctx.req.headers);
 		const refreshToken = cookies["refresh_token"];
 
-		const backToLogin = ctx.redirect("/login");
+		const backToLogin = ctx.redirect("/beta/login");
 
 		if (refreshToken) {
 			const token = await decode<Token>(refreshToken, env("JWT_SECRET", true));
