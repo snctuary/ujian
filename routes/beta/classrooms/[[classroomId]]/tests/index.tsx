@@ -69,7 +69,7 @@ export default define.page<typeof handler>(({ data }) => {
 				{tests.map((test) => (
 					<div
 						data-status={test.status}
-						class="flex flex-col p-3 rounded-xl border border-gray-200 shadow-md data-[status=2]:opacity-50 data-[status=2]:bg-slate-100"
+						class="flex flex-col p-3 rounded-xl border border-gray-200 shadow-md data-[status=2]:opacity-50 data-[status=3]:opacity-50 data-[status=2]:bg-slate-100"
 					>
 						<div class="flex flex-col">
 							<p class="text-lg font-medium">{test.name}</p>

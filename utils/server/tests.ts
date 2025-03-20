@@ -172,7 +172,7 @@ export async function fetchStatus(
 	if (Date.parse(test.endsAt) > Date.now()) {
 		return completed ? TestStatusCode.Completed : TestStatusCode.Ongoing;
 	} else {
-		return TestStatusCode.Ended;
+		return completed ? TestStatusCode.Completed : TestStatusCode.Ended;
 	}
 }
 
