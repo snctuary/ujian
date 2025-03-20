@@ -68,6 +68,65 @@ export async function createTest(
 	}
 }
 
+export async function createTestAnswer(
+	classroomId: string,
+	testId: string,
+	studentId: string,
+	answers: number[],
+) {
+	const questions = await fetchTestQuestions(classroomId, testId);
+	const randomized = await fetchRandomizedOrder(classroomId, testId, studentId);
+
+	if (!questions || !randomized) {
+		throw new Error("Can't find original or randomized questions");
+	} else {
+		const correctChoiceIds = questions.map((question) => {
+			const correctChoice = question.choices.find((choice) =>
+				choice.correctChoice
+			)!;
+			return question.choices.indexOf(correctChoice);
+		});
+
+		const results = correctChoiceIds.map((correctChoiceId, questionId) => {
+			const partialQuestion = randomized.find((q) =>
+				q.questionId === questionId
+			)!;
+			const selected = partialQuestion.choices.at(
+				answers.at(randomized.indexOf(partialQuestion))!,
+			);
+			return selected === correctChoiceId;
+		});
+
+		const testResult: TestResult = {
+			results,
+			score: (100 / questions.length) *
+				results.filter((result) => result === true).length,
+		};
+
+		const testResultKey = [
+			"classrooms",
+			classroomId,
+			"tests",
+			testId,
+			"results",
+			studentId,
+		];
+		const commit = await kv.atomic().set([...testResultKey, "data"], testResult)
+			.set([...testResultKey, "score"], testResult.score).delete([
+				"classrooms",
+				classroomId,
+				"tests",
+				testId,
+				"randomized",
+				studentId,
+			]).commit();
+
+		if (!commit.ok) {
+			throw new Error("Failed to save test result");
+		}
+	}
+}
+
 export async function editDraft(
 	classroomId: string,
 	authorId: string,
@@ -108,17 +167,7 @@ export async function fetchStatus(
 	test: Test,
 	studentId: string,
 ) {
-	const completed = !(await kv.atomic().check({
-		key: [
-			"classrooms",
-			classroomId,
-			"tests",
-			test.id,
-			"responses",
-			studentId,
-		],
-		versionstamp: null,
-	}).commit());
+	const completed = await fetchTestAnswer(classroomId, test.id, studentId);
 
 	if (Date.parse(test.endsAt) > Date.now()) {
 		return completed ? TestStatusCode.Completed : TestStatusCode.Ongoing;
@@ -137,6 +186,24 @@ export async function fetchTest(classroomId: string, testId: string) {
 		"info",
 	]);
 	return test.value;
+}
+
+export async function fetchTestAnswer(
+	classroomId: string,
+	testId: string,
+	studentId: string,
+) {
+	const testResult = await kv.get<TestResult>([
+		"classrooms",
+		classroomId,
+		"tests",
+		testId,
+		"results",
+		studentId,
+		"data",
+	]);
+
+	return testResult.value;
 }
 
 export async function fetchTestQuestions(classroomId: string, testId: string) {
@@ -282,6 +349,11 @@ export interface Test {
 	authorId: string;
 	endsAt: string;
 	totalQuestions: number;
+}
+
+export interface TestResult {
+	results: boolean[];
+	score: number;
 }
 
 export interface PartialTestQuestion extends Omit<TestQuestion, "choices"> {

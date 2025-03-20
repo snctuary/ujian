@@ -29,14 +29,14 @@ export const handler = define.handlers({
 					"Can't find questions data for this test",
 				);
 			} else {
-				return page({ test, questions: randomized });
+				return page({ classroomId, test, questions: randomized });
 			}
 		}
 	},
 });
 
 export default define.page<typeof handler>(({ data }) => {
-	const { test, questions } = data;
+	const { classroomId, test, questions } = data;
 
-	return <TestView data={{ ...test, questions }} />;
+	return <TestView data={{ ...test, classroomId, questions }} />;
 });
