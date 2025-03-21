@@ -3,10 +3,14 @@ import { useState } from "preact/hooks";
 interface Props {
 	classroomId: string;
 	draftId: string;
+	totalQuestions: number;
+	synced: boolean;
 	csrf?: string;
 }
 
-export function PublishTest({ classroomId, draftId, csrf }: Props) {
+export function PublishTest(
+	{ classroomId, draftId, totalQuestions, synced, csrf }: Props,
+) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [name, setName] = useState<string>();
 
@@ -99,7 +103,7 @@ export function PublishTest({ classroomId, draftId, csrf }: Props) {
 					<button
 						class="flex justify-center py-2 bg-black rounded-lg disabled:opacity-50"
 						type="submit"
-						disabled={!name}
+						disabled={!name || !totalQuestions || !synced}
 					>
 						<p class="text-white font-medium">Publish</p>
 					</button>

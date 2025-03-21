@@ -218,6 +218,8 @@ export function DraftEditor({ classroomId, draft }: Props) {
 					<PublishTest
 						classroomId={classroomId}
 						draftId={draft.id}
+						synced={synced}
+						totalQuestions={questions.length}
 						csrf={csrf}
 					/>
 				</div>
