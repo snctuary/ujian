@@ -1,11 +1,25 @@
-# Fresh project
+# Ujian
 
-Your new Fresh project is ready to go. You can follow the Fresh "Getting
-Started" guide here: https://fresh.deno.dev/docs/getting-started
+This is the source code for a web-based platform designed to facilitate online
+exams/tests
+
+### Installation
+
+Clone this repo
+
+```
+git clone https://github.com/snctuary/ujian.git
+```
 
 ### Usage
 
 Make sure to install Deno: https://deno.land/manual/getting_started/installation
+
+Add JWT_SECRET_KEY=your_secret_key to the .env file.
+
+```
+JWT_SECRET_KEY=your_secret_key
+```
 
 Then start the project in development mode:
 
