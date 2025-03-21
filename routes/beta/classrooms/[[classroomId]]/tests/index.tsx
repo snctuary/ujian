@@ -6,6 +6,8 @@ import {
 	TestStatusCode,
 } from "~/utils/server/tests.ts";
 import { TestStatus } from "~/components/beta/TestStatus.tsx";
+import { hasFlags } from "~/utils/server/flags.ts";
+import { ClassroomMemberFlags } from "~/utils/server/classrooms.ts";
 
 export const handler = define.handlers({
 	async GET(ctx) {
@@ -21,8 +23,10 @@ export const handler = define.handlers({
 
 		return page({
 			classroomId,
+			isStudent: hasFlags(member.flags, [ClassroomMemberFlags.Student]),
 			tests: fetchedTests.map((test) => ({
 				...test,
+				createdByMe: test.authorId === member.userId,
 				status: status.get(test.id)!,
 				statusText:
 					TestStatusCode[status.get(test.id)!] as keyof typeof TestStatusCode,
@@ -32,7 +36,7 @@ export const handler = define.handlers({
 });
 
 export default define.page<typeof handler>(({ data }) => {
-	const { classroomId, tests } = data;
+	const { classroomId, isStudent, tests } = data;
 
 	return (
 		<div class="flex flex-col size-full relative gap-2 border border-gray-300 rounded-xl divide-y divide-gray-300">
@@ -69,7 +73,7 @@ export default define.page<typeof handler>(({ data }) => {
 				{tests.map((test) => (
 					<div
 						data-status={test.status}
-						class="flex flex-col p-3 rounded-xl border border-gray-200 shadow-md data-[status=2]:opacity-50 data-[status=3]:opacity-50 data-[status=2]:bg-slate-100"
+						class="flex flex-col p-3 rounded-xl border border-gray-200 shadow-md"
 					>
 						<div class="flex flex-col">
 							<p class="text-lg font-medium">{test.name}</p>
@@ -100,19 +104,52 @@ export default define.page<typeof handler>(({ data }) => {
 								</div>
 							</div>
 						</div>
-						<div class="flex items-center justify-between mt-2">
-							<TestStatus status={test.status} statusText={test.statusText} />
-							<a
-								href={`/beta/classrooms/${classroomId}/tests/${test.id}`}
-								f-client-nav={false}
-							>
-								<div
-									data-status={test.status}
-									class="hidden data-[status=1]:flex px-3 py-2 bg-black rounded-lg"
+						<div
+							class="flex items-center justify-between mt-2"
+							f-client-nav={false}
+						>
+							{isStudent && (
+								<>
+									<a
+										href={`/beta/classrooms/${classroomId}/tests/${test.id}`}
+									>
+										<div
+											data-status={test.status}
+											class="hidden data-[status=1]:flex px-3 py-2 bg-black rounded-lg"
+										>
+											<p class="text-white text-sm font-mediumm">Start Exam</p>
+										</div>
+									</a>
+									<TestStatus
+										status={test.status}
+										statusText={test.statusText}
+									/>
+								</>
+							)}
+							{test.createdByMe && (
+								<a
+									href={`/beta/classrooms/${classroomId}/tests/${test.id}/results`}
 								>
-									<p class="text-white text-sm font-mediumm">Start Exam</p>
-								</div>
-							</a>
+									<div class="flex items-center gap-2 px-3 py-2 bg-black rounded-lg text-white">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="20"
+											height="20"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2.25"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											class="lucide lucide-chart-pie"
+										>
+											<path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z" />
+											<path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+										</svg>
+										<p class="text-sm font-mediumm">View Results</p>
+									</div>
+								</a>
+							)}
 						</div>
 					</div>
 				))}

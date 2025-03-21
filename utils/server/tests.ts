@@ -98,6 +98,7 @@ export async function createTestAnswer(
 		});
 
 		const testResult: TestResult = {
+			userId: studentId,
 			results,
 			score: (100 / questions.length) *
 				results.filter((result) => result === true).length,
@@ -107,6 +108,7 @@ export async function createTestAnswer(
 			"classrooms",
 			classroomId,
 			"tests",
+			"byId",
 			testId,
 			"results",
 			studentId,
@@ -197,6 +199,7 @@ export async function fetchTestAnswer(
 		"classrooms",
 		classroomId,
 		"tests",
+		"byId",
 		testId,
 		"results",
 		studentId,
@@ -225,6 +228,17 @@ export async function fetchTests(classroomId: string) {
 		}),
 	);
 	return tests.filter((ctx) => ctx.key.at(-1) === "info").map((test) =>
+		test.value
+	);
+}
+
+export async function fetchTestResults(classroomId: string, testId: string) {
+	const tests = await Array.fromAsync(
+		kv.list<TestResult>({
+			prefix: ["classrooms", classroomId, "tests", "byId", testId, "results"],
+		}),
+	);
+	return tests.filter((ctx) => ctx.key.at(-1) === "data").map((test) =>
 		test.value
 	);
 }
@@ -352,6 +366,7 @@ export interface Test {
 }
 
 export interface TestResult {
+	userId: string;
 	results: boolean[];
 	score: number;
 }
