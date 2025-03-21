@@ -44,26 +44,30 @@ export async function createTest(
 	if (!template) {
 		throw new Error("Unknown Template");
 	} else {
-		const newTest: Test = {
-			id: snowflake(),
-			name,
-			endsAt: new Date(Math.floor(Date.now()) + (duration * 60 * 1_000))
-				.toISOString(),
-			authorId,
-			totalQuestions: template.questions.length,
-		};
-
-		const testKey = ["classrooms", classroomId, "tests", "byId", newTest.id];
-
-		const commit = await kv.atomic().set([...testKey, "info"], newTest).set([
-			...testKey,
-			"data",
-		], template.questions).commit();
-
-		if (commit.ok) {
-			return newTest;
+		if (!template.questions.length) {
+			throw new Error("This test has no questions, need at least 1");
 		} else {
-			throw new Error("Failed to create test");
+			const newTest: Test = {
+				id: snowflake(),
+				name,
+				endsAt: new Date(Math.floor(Date.now()) + (duration * 60 * 1_000))
+					.toISOString(),
+				authorId,
+				totalQuestions: template.questions.length,
+			};
+
+			const testKey = ["classrooms", classroomId, "tests", "byId", newTest.id];
+
+			const commit = await kv.atomic().set([...testKey, "info"], newTest).set([
+				...testKey,
+				"data",
+			], template.questions).commit();
+
+			if (commit.ok) {
+				return newTest;
+			} else {
+				throw new Error("Failed to create test");
+			}
 		}
 	}
 }
@@ -126,6 +130,24 @@ export async function createTestAnswer(
 		if (!commit.ok) {
 			throw new Error("Failed to save test result");
 		}
+	}
+}
+
+export async function deleteTest(classroomId: string, testId: string) {
+	const atomic = kv.atomic();
+
+	for await (
+		const { key } of kv.list({
+			prefix: ["classrooms", classroomId, "tests", "byId", testId],
+		})
+	) {
+		atomic.delete(key);
+	}
+
+	const commit = await atomic.commit();
+
+	if (!commit.ok) {
+		throw new Error("Failed to delete test");
 	}
 }
 
