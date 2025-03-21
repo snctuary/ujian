@@ -1,9 +1,13 @@
 import { define } from "~/utils/server/core.ts";
-import { retrieveClassroomMembers } from "~/utils/server/classrooms.ts";
+import {
+	ClassroomMemberFlags,
+	retrieveClassroomMembers,
+} from "~/utils/server/classrooms.ts";
 import { page } from "fresh";
 import { memberRole } from "~/utils/client/memberRole.ts";
 import { Partial } from "fresh/runtime";
 import { Invite } from "~/islands/beta/Invite.tsx";
+import { hasFlags } from "~/utils/server/flags.ts";
 
 export const handler = define.handlers({
 	async GET(ctx) {
@@ -12,13 +16,18 @@ export const handler = define.handlers({
 			true,
 		);
 
-		return page({ members });
+		return page({
+			isHomeroom: hasFlags(ctx.state.currentClassroomMember!.flags, [
+				ClassroomMemberFlags.HomeroomTeacher,
+			]),
+			members,
+		});
 	},
 });
 
 export default define.page<typeof handler>((ctx) => {
 	const classroomId = ctx.state.currentClassroomId!;
-	const { members } = ctx.data;
+	const { isHomeroom, members } = ctx.data;
 
 	return (
 		<div class="flex flex-col grow relative gap-2 border border-gray-300 rounded-xl divide-y divide-gray-300">
@@ -50,7 +59,7 @@ export default define.page<typeof handler>((ctx) => {
 						type="text"
 					/>
 				</form>
-				<Invite classroomId={classroomId} />
+				{isHomeroom && <Invite classroomId={classroomId} />}
 			</div>
 			<div class="grow overflow-y-auto no-scrollbar">
 				<Partial name="members">
