@@ -19,7 +19,7 @@ export const handler = define.handlers({
 	},
 	async POST(ctx) {
 		if (ctx.state.user) {
-			return ctx.redirect("/");
+			return ctx.redirect("/beta/classrooms");
 		} else {
 			const formData = await ctx.req.formData();
 			const username = formData.get("username");

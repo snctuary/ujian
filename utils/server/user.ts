@@ -1,7 +1,10 @@
 import { kv } from "~/utils/server/core.ts";
 import { snowflake } from "~/utils/server/snowflake.ts";
 import { hash } from "@bronti/bcrypt";
-import { cleanContent } from "~/utils/server/cleanContent.ts";
+
+const FORMATTING_PATTERN = {
+	Username: /^[a-z0-9]{3,20}$/,
+};
 
 interface CreateUserOptions extends Omit<User, "avatar" | "id"> {
 	avatar?: Blob;
@@ -11,30 +14,34 @@ export async function createUser(
 	{ avatar, password, username }: CreateUserOptions,
 ) {
 	const id = snowflake();
-	const newUser: User = {
-		id,
-		// TODO: create username regexp
-		username: cleanContent(username),
-	};
 
-	if (avatar) {
-		// TODO: upload user avatar
-	}
-
-	const usernameKey = ["users", "username", newUser.username];
-	const commit = await kv.atomic().check({
-		key: usernameKey,
-		versionstamp: null,
-	}).set(["users", "id", newUser.id], newUser)
-		.set(["users", "password", newUser.id], await hash(password)).set(
-			usernameKey,
-			newUser.id,
-		).commit();
-
-	if (commit.ok) {
-		return newUser;
+	if (!username.match(FORMATTING_PATTERN.Username)) {
+		throw new Error("Inavlid username format");
 	} else {
-		throw new Error("Failed to create user");
+		const newUser: User = {
+			id,
+			username,
+		};
+
+		if (avatar) {
+			// TODO: upload user avatar
+		}
+
+		const usernameKey = ["users", "username", newUser.username];
+		const commit = await kv.atomic().check({
+			key: usernameKey,
+			versionstamp: null,
+		}).set(["users", "id", newUser.id], newUser)
+			.set(["users", "password", newUser.id], await hash(password)).set(
+				usernameKey,
+				newUser.id,
+			).commit();
+
+		if (commit.ok) {
+			return newUser;
+		} else {
+			throw new Error("Failed to create user");
+		}
 	}
 }
 

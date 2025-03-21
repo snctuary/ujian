@@ -17,7 +17,7 @@ export async function createSession(userId: string) {
 	const accessToken = await createToken(userId, "access_token");
 	const refreshToken = await createToken(userId, "refresh_token");
 
-	const headers = new Headers({ location: "/home" });
+	const headers = new Headers({ location: "/beta/classrooms" });
 
 	setCookie(headers, {
 		name: "access_token",
