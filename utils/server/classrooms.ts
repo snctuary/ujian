@@ -162,6 +162,25 @@ export async function createClassroomTestResponse(
 	}
 }
 
+export async function editClassroom(
+	classroomId: string,
+	data: Partial<Classroom>,
+) {
+	const classroom = await retrieveClassroom(classroomId, true);
+	const newData: Classroom = {
+		...classroom,
+		name: cleanContent(data.name ?? classroom.name),
+	};
+
+	const commit = await kv.set(["classrooms", classroomId], newData);
+
+	if (commit.ok) {
+		return newData;
+	} else {
+		throw new Error("Failed to edit classroom");
+	}
+}
+
 export async function isAlreadySubmitTestResponses(
 	classroomId: string,
 	testId: string,
