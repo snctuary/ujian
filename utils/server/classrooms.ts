@@ -162,6 +162,25 @@ export async function createClassroomTestResponse(
 	}
 }
 
+export async function editClassroom(
+	classroomId: string,
+	data: Partial<Classroom>,
+) {
+	const classroom = await retrieveClassroom(classroomId, true);
+	const newData: Classroom = {
+		...classroom,
+		name: cleanContent(data.name ?? classroom.name),
+	};
+
+	const commit = await kv.set(["classrooms", classroomId], newData);
+
+	if (commit.ok) {
+		return newData;
+	} else {
+		throw new Error("Failed to edit classroom");
+	}
+}
+
 export async function isAlreadySubmitTestResponses(
 	classroomId: string,
 	testId: string,
@@ -231,10 +250,13 @@ export async function randomizeClassroomTestQuestions(
 
 export async function fetchClassrooms(classroomIds: string[]) {
 	const classrooms = await Promise.all(
-		classroomIds.map((classroomId) => retrieveClassroom(classroomId, true)),
+		classroomIds.map((classroomId) => retrieveClassroom(classroomId)),
+	);
+	const availableClassrooms = classrooms.filter((classroom) =>
+		classroom !== null
 	);
 	const userIds = new Set<string>(
-		classrooms.map((classroom) => classroom.homeroomTeacherId),
+		availableClassrooms.map((classroom) => classroom.homeroomTeacherId),
 	);
 	const users = new Map<string, User>();
 
@@ -243,7 +265,7 @@ export async function fetchClassrooms(classroomIds: string[]) {
 		users.set(userId, user);
 	}
 
-	return classrooms.map((classroom) => ({
+	return availableClassrooms.map((classroom) => ({
 		...classroom,
 		homeroomTeacher: users.get(classroom.homeroomTeacherId)!,
 	}));
