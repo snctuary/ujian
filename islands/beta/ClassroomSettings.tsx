@@ -8,7 +8,7 @@ interface Props {
 }
 
 export function ClassroomSettings({ classroom }: Props) {
-	const [currentName, setCurrentName] = useState<string>(classroom.name);
+	const [currentName, _setCurrentName] = useState<string>(classroom.name);
 	const [name, setName] = useState<string>(classroom.name);
 	const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 	const [isRenaming, setIsRenaming] = useState<boolean>(false);
@@ -29,10 +29,7 @@ export function ClassroomSettings({ classroom }: Props) {
 			);
 
 			if (response.ok && response.data) {
-				const newName = response.data.name;
-
-				setCurrentName(newName);
-				setName(newName);
+				globalThis.location.reload();
 			}
 			setIsRenaming(false);
 		}
@@ -52,7 +49,7 @@ export function ClassroomSettings({ classroom }: Props) {
 					class="rounded-xl bg-black text-white font-medium text-sm px-3 py-1.5 disabled:opacity-50 transition-all ease-in-out duration-150"
 					type="button"
 					onClick={() => renameClassroom()}
-					disabled={isRenaming && (name === currentName)}
+					disabled={isRenaming || (name === currentName)}
 				>
 					Rename
 				</button>
