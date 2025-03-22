@@ -35,6 +35,25 @@ export function ClassroomSettings({ classroom }: Props) {
 		}
 	}
 
+	async function removeClassroom() {
+		if (csrf) {
+			setIsDeleting(true);
+
+			const response = await makeRequest(
+				`/beta/api/classrooms/${classroom.id}`,
+				{
+					method: "DELETE",
+					csrfToken: csrf,
+				},
+			);
+
+			if (response.ok) {
+				globalThis.location.href = `/beta/classrooms`;
+			}
+			setIsDeleting(false);
+		}
+	}
+
 	return (
 		<div class="flex flex-col grow relative gap-2 border border-gray-300 rounded-xl p-4 overflow-y-auto no-scrollbar">
 			<p class="font-semibold">Classroom Name</p>
@@ -77,7 +96,8 @@ export function ClassroomSettings({ classroom }: Props) {
 								<button
 									class="rounded-xl bg-red-500 text-white font-medium text-sm px-4 py-2 disabled:opacity-50 transition-all ease-in-out duration-150"
 									type="button"
-									disabled={!confirmDelete}
+									onClick={() => removeClassroom()}
+									disabled={!confirmDelete || isDeleting}
 								>
 									Yes, I'm sure
 								</button>

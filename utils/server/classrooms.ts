@@ -250,10 +250,13 @@ export async function randomizeClassroomTestQuestions(
 
 export async function fetchClassrooms(classroomIds: string[]) {
 	const classrooms = await Promise.all(
-		classroomIds.map((classroomId) => retrieveClassroom(classroomId, true)),
+		classroomIds.map((classroomId) => retrieveClassroom(classroomId)),
+	);
+	const availableClassrooms = classrooms.filter((classroom) =>
+		classroom !== null
 	);
 	const userIds = new Set<string>(
-		classrooms.map((classroom) => classroom.homeroomTeacherId),
+		availableClassrooms.map((classroom) => classroom.homeroomTeacherId),
 	);
 	const users = new Map<string, User>();
 
@@ -262,7 +265,7 @@ export async function fetchClassrooms(classroomIds: string[]) {
 		users.set(userId, user);
 	}
 
-	return classrooms.map((classroom) => ({
+	return availableClassrooms.map((classroom) => ({
 		...classroom,
 		homeroomTeacher: users.get(classroom.homeroomTeacherId)!,
 	}));
