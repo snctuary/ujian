@@ -71,7 +71,7 @@ export default define.page<typeof handler>(({ data }) => {
 					</div>
 					<div class="flex flex-col p-4 grow overflow-y-auto scroll-smooth no-scrollbar">
 						<ProfileEditor
-							currentAvatar={user.avatarUrl}
+							avatarUrl={user.avatarUrl}
 							username={user.username}
 						/>
 					</div>

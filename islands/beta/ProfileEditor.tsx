@@ -1,14 +1,17 @@
 import { useEffect, useState } from "preact/hooks";
 import { handleCsrf } from "~/utils/client/csrf.ts";
+import { makeRequest } from "~/utils/client/makeRequest.ts";
+import { User } from "~/utils/server/user.ts";
 
 interface Props {
-	currentAvatar?: string;
+	avatarUrl?: string;
 	username: string;
 }
 
-export function ProfileEditor({ currentAvatar, username }: Props) {
+export function ProfileEditor({ avatarUrl, username }: Props) {
 	const [avatar, setAvatar] = useState<File>();
-	const [preview, setPreview] = useState<string | null>(null);
+	const [preview, setPreview] = useState<string | null>(avatarUrl ?? null);
+	const [updating, setUpdating] = useState<boolean>(false);
 
 	const [csrf, setCsrf] = useState<string>();
 	useEffect(() => handleCsrf(setCsrf), []);
@@ -24,23 +27,52 @@ export function ProfileEditor({ currentAvatar, username }: Props) {
 		}
 	}, [avatar]);
 
+	const eligible = !updating && (avatarUrl !== preview);
+
+	async function update() {
+		if (csrf) {
+			setUpdating(true);
+			const formData = new FormData();
+
+			formData.set("payload_json", JSON.stringify({}));
+			if (avatar) {
+				formData.set("avatar", avatar);
+			}
+
+			const response = await makeRequest<User>(`/beta/api/users/me`, {
+				method: "POST",
+				body: formData,
+				csrfToken: csrf,
+			});
+
+			if (response.ok) {
+				globalThis.location.reload();
+			}
+			setUpdating(false);
+		}
+	}
+
 	return (
-		<form
+		<div
 			id="profile"
 			class="flex flex-col gap-1"
-			method="POST"
-			action="/api/users/me"
 		>
 			<input class="hidden" name="_csrf" type="text" value={csrf} />
+			<input
+				class="hidden"
+				name="payload_json"
+				type="text"
+				value={JSON.stringify({})}
+			/>
 			<p class="font-medium text-lg">My Profile</p>
-			<div class="flex items-center gap-3">
+			<div class="flex items-center max-w-80 gap-3">
 				<div class="relative size-20">
 					<label for="avatar">
 						<div class="bg-slate-100 size-full rounded-full overflow-hidden border border-gray-100">
-							{(currentAvatar || preview) && (
+							{(avatarUrl || preview) && (
 								<img
 									class="size-full object-cover"
-									src={preview ?? currentAvatar}
+									src={preview ?? avatarUrl}
 								/>
 							)}
 						</div>
@@ -68,6 +100,16 @@ export function ProfileEditor({ currentAvatar, username }: Props) {
 					value={username}
 				/>
 			</div>
-		</form>
+			<div class="mt-2">
+				<button
+					class="bg-black px-3 py-2 text-sm text-white font-medium rounded-lg disabled:opacity-50"
+					type="button"
+					disabled={!eligible}
+					onClick={() => update()}
+				>
+					{!updating ? "Update" : "Updating"}
+				</button>
+			</div>
+		</div>
 	);
 }
