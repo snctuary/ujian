@@ -38,7 +38,7 @@ export default define.page<typeof handler>(({ data }) => {
 	const { classroomId, test, results } = data;
 
 	return (
-		<div class="flex flex-col h-full relative divide-y divide-gray-300">
+		<div class="flex flex-col h-full relative divide-y divide-gray-300 font-[Outfit]">
 			<div class="flex items-center gap-2 sticky top-0 p-4">
 				<a href={`/beta/classrooms/${classroomId}/tests`}>
 					<div class="hover:bg-slate-100 rounded-xl p-2">

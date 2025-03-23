@@ -93,7 +93,7 @@ export async function retrieveUser(userId: string, required?: boolean) {
 }
 
 export interface User {
-	avatar?: string;
+	avatarUrl?: string;
 	id: string;
 	username: string;
 }
