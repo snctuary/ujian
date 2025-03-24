@@ -65,7 +65,11 @@ export default define.page<typeof handler>(({ data }) => {
 					<div class="flex flex-col p-4 border border-gray-100 shadow-md rounded-2xl">
 						<div class="flex justify-between items-center">
 							<div class="flex items-center gap-4 grow">
-								<div class="rounded-full size-12 bg-slate-100"></div>
+								<div class="rounded-full size-12 bg-slate-100 overflow-hidden">
+									{result.user.avatarUrl && (
+										<img class="size-full" src={result.user.avatarUrl} />
+									)}
+								</div>
 								<div class="flex flex-col">
 									<p class="font-semibold">{result.user.username}</p>
 									<p class="font-medium text-slate-400 text-sm">
