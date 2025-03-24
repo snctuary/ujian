@@ -5,6 +5,7 @@ import { Partial } from "fresh/runtime";
 import { hasFlags } from "~/utils/server/flags.ts";
 import { ClassroomMemberFlags } from "~/utils/server/classrooms.ts";
 import { MobileSettings } from "~/islands/beta/MobileSettings.tsx";
+import { DesktopSettings } from "~/islands/beta/DesktopSettings.tsx";
 
 export const config: RouteConfig = {
 	skipInheritedLayouts: true,
@@ -23,7 +24,7 @@ export default define.page((ctx) => {
 					<ctx.Component />
 				</Partial>
 			</div>
-			<div class="flex flex-col order-first gap-3 px-3 pt-3 md:bg-slate-50">
+			<div class="flex flex-col order-first gap-3 p-3 md:bg-slate-50">
 				<div class="flex justify-between items-center">
 					<ClassroomSwitcher
 						currentClassroomId={ctx.state.currentClassroomId}
@@ -250,6 +251,7 @@ export default define.page((ctx) => {
 						</>
 					)}
 				</div>
+				<DesktopSettings user={ctx.state.user!} />
 			</div>
 		</div>
 	);
