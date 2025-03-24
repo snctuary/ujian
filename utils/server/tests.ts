@@ -30,7 +30,7 @@ export async function createDraft(
 	}
 }
 
-interface CreateTestOptions extends Pick<Test, "name"> {
+export interface CreateTestOptions extends Pick<Test, "name"> {
 	duration: number;
 	templateId: string;
 }

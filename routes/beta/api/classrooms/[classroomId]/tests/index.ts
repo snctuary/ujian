@@ -1,32 +1,17 @@
-import { HttpError } from "fresh";
-import { STATUS_CODE } from "@std/http/status";
 import { define } from "~/utils/server/core.ts";
-import { createTest } from "~/utils/server/tests.ts";
+import { createTest, CreateTestOptions } from "~/utils/server/tests.ts";
 
 export const handler = define.handlers({
 	async POST(ctx) {
 		const classroomId = ctx.state.currentClassroomId!;
-		const data = await ctx.req.formData();
+		const data: CreateTestOptions = await ctx.req.json();
 
-		const name = data.get("name");
-		const duration = Number(data.get("duration"));
-		const templateId = data.get("templateId");
+		const newTest = await createTest(
+			classroomId,
+			ctx.state.currentClassroomMember!.userId,
+			data,
+		);
 
-		if (
-			typeof name !== "string" || isNaN(duration) ||
-			typeof templateId !== "string"
-		) {
-			throw new HttpError(STATUS_CODE.BadRequest);
-		} else {
-			await createTest(
-				classroomId,
-				ctx.state.currentClassroomMember!.userId,
-				{ name, duration, templateId },
-			);
-
-			return ctx.redirect(
-				`/beta/classrooms/${classroomId}/tests`,
-			);
-		}
+		return Response.json(newTest);
 	},
 });
