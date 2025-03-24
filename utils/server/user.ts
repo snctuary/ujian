@@ -1,6 +1,10 @@
 import { kv } from "~/utils/server/core.ts";
 import { snowflake } from "~/utils/server/snowflake.ts";
 import { hash } from "@bronti/bcrypt";
+import { encodeBase64 } from "@std/encoding/base64";
+import { encodeHex } from "@std/encoding/hex";
+import { kit } from "~/utils/server/imagekit.ts";
+import { env } from "~/utils/server/env.ts";
 
 const FORMATTING_PATTERN = {
 	Username: /^[a-z0-9]{3,20}$/,
@@ -92,8 +96,45 @@ export async function retrieveUser(userId: string, required?: boolean) {
 	return user.value;
 }
 
+export async function updateUser(user: User, data: UpdateUserData) {
+	const newData: User = user;
+
+	const atomic = kv.atomic();
+
+	if (data.avatar) {
+		const avatarIdKey = ["users", "id", user.id, "avatar"];
+		const oldAvatarId = await kv.get<string>(avatarIdKey);
+
+		if (oldAvatarId.value) {
+			await kit().deleteFile(oldAvatarId.value);
+		}
+
+		const encoded = encodeBase64(await data.avatar.arrayBuffer());
+		const uploadedAvatar = await kit().upload({
+			file: encoded,
+			fileName: encodeHex(crypto.randomUUID()),
+			folder: `${env("IMAGEKIT_FOLDER_PATH")}/avatars/${user.id}`,
+		});
+
+		newData.avatarUrl = uploadedAvatar.url;
+		atomic.set(avatarIdKey, uploadedAvatar.fileId);
+	}
+
+	const commit = await kv.set(["users", "id", user.id], newData);
+
+	if (commit.ok) {
+		return newData;
+	} else {
+		throw new Error("Failed to update user");
+	}
+}
+
 export interface User {
-	avatar?: string;
+	avatarUrl?: string;
 	id: string;
 	username: string;
+}
+
+export interface UpdateUserData extends Partial<Pick<User, "username">> {
+	avatar?: File | null;
 }

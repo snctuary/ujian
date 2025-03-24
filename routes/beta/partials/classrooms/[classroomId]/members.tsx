@@ -36,7 +36,11 @@ export default define.page<typeof handler>(({ data }) => {
 						<tr class="hover:bg-gray-50">
 							<td class="border-b border-gray-300 h-14">
 								<div class="flex justify-center items-center gap-2">
-									<div class="size-8 bg-gray-100 rounded-full"></div>
+									<div class="size-8 bg-gray-100 rounded-full overflow-hidden">
+										{member.user.avatarUrl && (
+											<img class="size-full" src={member.user.avatarUrl} />
+										)}
+									</div>
 									{member.user.username}
 								</div>
 							</td>
