@@ -27,7 +27,7 @@ export function ProfileEditor({ avatarUrl, username }: Props) {
 		}
 	}, [avatar]);
 
-	const eligible = !updating && (avatarUrl !== preview);
+	const notEligible = updating || !preview;
 
 	async function update() {
 		if (csrf) {
@@ -104,7 +104,7 @@ export function ProfileEditor({ avatarUrl, username }: Props) {
 				<button
 					class="bg-black px-3 py-2 text-sm text-white font-medium rounded-lg disabled:opacity-50"
 					type="button"
-					disabled={!eligible}
+					disabled={notEligible}
 					onClick={() => update()}
 				>
 					{!updating ? "Update" : "Updating"}
