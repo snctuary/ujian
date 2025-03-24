@@ -114,13 +114,16 @@ export async function updateUser(user: User, data: UpdateUserData) {
 			file: encoded,
 			fileName: encodeHex(crypto.randomUUID()),
 			folder: `${env("IMAGEKIT_FOLDER_PATH")}/avatars/${user.id}`,
+			transformation: {
+				pre: "ar-1-1,w-700",
+			},
 		});
 
 		newData.avatarUrl = uploadedAvatar.url;
 		atomic.set(avatarIdKey, uploadedAvatar.fileId);
 	}
 
-	const commit = await kv.set(["users", "id", user.id], newData);
+	const commit = await atomic.set(["users", "id", user.id], newData).commit();
 
 	if (commit.ok) {
 		return newData;
