@@ -32,5 +32,3 @@ jobs:
           project: "liyo-ujian"
           entrypoint: "main.ts"
           exclude: .vscode*,dev.ts
-          
-          
