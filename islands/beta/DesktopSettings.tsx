@@ -6,7 +6,7 @@ interface Props {
 
 export function DesktopSettings({ user }: Props) {
 	return (
-		<div class="flex justify-between items-center p-4 rounded-xl bg-white shadow-lg border border-gray-200 group">
+		<div class="hidden md:flex justify-between items-center p-4 rounded-xl bg-white shadow-lg border border-gray-200 group">
 			<div class="flex items-center gap-2">
 				{user.avatarUrl && (
 					<img class="size-8 rounded-full" src={user.avatarUrl} />
