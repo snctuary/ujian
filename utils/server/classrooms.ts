@@ -290,6 +290,39 @@ export async function findClassroomByInvite(inviteCode: string) {
 	return classroomId.value;
 }
 
+export async function removeClassroomMember(
+	classroomId: string,
+	member: ClassroomMember,
+) {
+	if (hasFlags(member.flags, [ClassroomMemberFlags.HomeroomTeacher])) {
+		throw new Error("You can't leave your own classroom");
+	} else {
+		const joinedClassrooms = await retrieveJoinedClassrooms(member.userId);
+		const user = await retrieveUser(member.userId, true);
+		const membersWithSameUsername = await searchMembers(
+			classroomId,
+			user.username,
+		);
+
+		const membersKey = ["classrooms", classroomId, "members"];
+		const commit = await kv.atomic().delete([
+			...membersKey,
+			"byId",
+			member.userId,
+		]).set(
+			[...membersKey, "byName", user.username],
+			membersWithSameUsername.filter((id) => id !== member.userId),
+		).set(
+			["users", "classrooms", member.userId],
+			joinedClassrooms.filter((id) => id !== classroomId),
+		).commit();
+
+		if (!commit.ok) {
+			throw new Error("Failed to remove member");
+		}
+	}
+}
+
 export async function deleteClassroom(classroomId: string) {
 	const classroom = await retrieveClassroom(classroomId, true);
 
