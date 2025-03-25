@@ -99,7 +99,7 @@ export function LeaveClassroom({ classroomId }: Props) {
 								<path d="M12 17h.01" />
 							</svg>
 						</div>
-						<div class="flex flex-col items-center gap-0 mt-4">
+						<div class="flex flex-col items-center gap-0 mt-4 text-center">
 							<p class="font-semibold">
 								Are you sure want to leave this classroom?
 							</p>
