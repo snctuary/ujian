@@ -6,6 +6,7 @@ import { hasFlags } from "~/utils/server/flags.ts";
 import { ClassroomMemberFlags } from "~/utils/server/classrooms.ts";
 import { MobileSettings } from "~/islands/beta/MobileSettings.tsx";
 import { DesktopSettings } from "~/islands/beta/DesktopSettings.tsx";
+import { LeaveClassroom } from "~/islands/beta/LeaveClassroom.tsx";
 
 export const config: RouteConfig = {
 	skipInheritedLayouts: true,
@@ -114,32 +115,34 @@ export default define.page((ctx) => {
 							</a>
 						)}
 						{hasFlags(currentMember.flags, [
-							ClassroomMemberFlags.HomeroomTeacher,
-						]) && (
-							<a
-								class="group"
-								href={`/beta/classrooms/${ctx.state.currentClassroomId}/settings`}
-							>
-								<div class="flex items-center gap-2 group-aria-[current]:bg-gray-950 hover:bg-slate-100 group-aria-[current]:hover:bg-gray-950 rounded-lg px-3 py-2 text-black group-aria-[current]:text-white">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="20"
-										height="20"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										class="lucide lucide-bolt"
-									>
-										<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-										<circle cx="12" cy="12" r="4" />
-									</svg>
-									<p>Settings</p>
-								</div>
-							</a>
-						)}
+								ClassroomMemberFlags.HomeroomTeacher,
+							])
+							? (
+								<a
+									class="group"
+									href={`/beta/classrooms/${ctx.state.currentClassroomId}/settings`}
+								>
+									<div class="flex items-center gap-2 group-aria-[current]:bg-gray-950 hover:bg-slate-100 group-aria-[current]:hover:bg-gray-950 rounded-lg px-3 py-2 text-black group-aria-[current]:text-white">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="20"
+											height="20"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											class="lucide lucide-bolt"
+										>
+											<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+											<circle cx="12" cy="12" r="4" />
+										</svg>
+										<p>Settings</p>
+									</div>
+								</a>
+							)
+							: <LeaveClassroom classroomId={ctx.state.currentClassroomId!} />}
 					</div>
 				)}
 				<div class="hidden md:flex flex-col gap-1 font-medium grow">
@@ -220,33 +223,36 @@ export default define.page((ctx) => {
 										<p>Drafts</p>
 									</a>
 								)}
+							<p class="pl-2 text-slate-500 text-sm mt-2">MANAGEMENT</p>
 							{hasFlags(currentMember.flags, [
 								ClassroomMemberFlags.HomeroomTeacher,
 							]) && (
-								<>
-									<p class="pl-2 text-slate-500 text-sm mt-2">MANAGEMENT</p>
-									<a
-										class="flex items-center gap-2 text-black aria-[current]:text-white aria-[current]:bg-black fill-current rounded-xl p-2 hover:bg-slate-200 transition-all ease-in-out duration-100"
-										href={`/beta/classrooms/${ctx.state.currentClassroomId}/settings`}
+								<a
+									class="flex items-center gap-2 text-black aria-[current]:text-white aria-[current]:bg-black fill-current rounded-xl p-2 hover:bg-slate-200 transition-all ease-in-out duration-100"
+									href={`/beta/classrooms/${ctx.state.currentClassroomId}/settings`}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2.75"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="lucide lucide-bolt"
 									>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="20"
-											height="20"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2.75"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											class="lucide lucide-bolt"
-										>
-											<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-											<circle cx="12" cy="12" r="4" />
-										</svg>
-										<p>Settings</p>
-									</a>
-								</>
+										<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+										<circle cx="12" cy="12" r="4" />
+									</svg>
+									<p>Settings</p>
+								</a>
+							)}
+							{!hasFlags(currentMember.flags, [
+								ClassroomMemberFlags.HomeroomTeacher,
+							]) && (
+								<LeaveClassroom classroomId={ctx.state.currentClassroomId} />
 							)}
 						</>
 					)}
