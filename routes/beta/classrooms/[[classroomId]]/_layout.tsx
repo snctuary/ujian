@@ -17,7 +17,7 @@ export default define.page((ctx) => {
 
 	return (
 		<div
-			class="flex flex-col md:flex-row h-full font-[Outfit] select-none overflow-y-auto no-scrollbar"
+			class="flex flex-col md:flex-row h-full font-[Outfit] select-none overflow-x-hidden overflow-y-auto no-scrollbar"
 			f-client-nav
 		>
 			<div class="flex flex-col grow p-4 overflow-y-auto">
