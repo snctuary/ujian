@@ -181,6 +181,34 @@ export async function editClassroom(
 	}
 }
 
+export async function editClassroomMember(
+	classroomId: string,
+	memberId: string,
+	data: Partial<EditMemberData>,
+) {
+	const member = await retrieveClassroomMember(classroomId, memberId, true);
+
+	const updatedData: ClassroomMember = {
+		...member,
+		flags: hasFlags(member.flags, [ClassroomMemberFlags.HomeroomTeacher])
+			? member.flags
+			: (data.flags ?? member.flags),
+	};
+	const commit = await kv.set([
+		"classrooms",
+		classroomId,
+		"members",
+		"byId",
+		memberId,
+	], updatedData);
+
+	if (commit.ok) {
+		return updatedData;
+	} else {
+		throw new Error("Failed to edit member");
+	}
+}
+
 export async function isAlreadySubmitTestResponses(
 	classroomId: string,
 	testId: string,
@@ -550,6 +578,7 @@ export interface ClassroomMember {
 	flags: ClassroomMemberFlags;
 	userId: string;
 }
+export type EditMemberData = Pick<ClassroomMember, "flags">;
 
 export interface ClassroomTest {
 	id: string;
